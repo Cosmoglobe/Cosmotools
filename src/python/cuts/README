@@ -1,0 +1,4 @@
+Python scripts for handling and generating data cuts
+
+- secateur.py [JTLZ] -- toolkit for handling cuts
+- APEX_weather.py [Osamu] -- fetches APEX PWV (etc) data
