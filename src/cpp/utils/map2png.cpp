@@ -204,7 +204,7 @@ Image make_colorbar(Transformation * trf, const Colorizer & color,
 
 	double a = trf->backwards(0), b = trf->backwards(1);
 
-	// Find number of thicks
+	// Find number of ticks
 	int tickpow = a == b ? 0 : int(floor(log(b-a)/log(10.))-ticks+1);
 	int maxtick = min(ticks, ny/3);
 
