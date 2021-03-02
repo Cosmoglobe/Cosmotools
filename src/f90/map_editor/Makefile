@@ -6,6 +6,10 @@ map_editor : libmap_editor.a map_editor.o
 
 map_editor_complex_ops_mod.o    : map_editor_utils.o 
 
+# $(RANLIB) is ranlib
+
+#echo "$(COBJS)"
+
 libmap_editor.a : $(COBJS)
 	$(AR) $(ARFLAGS) libmap_editor.a $(COBJS)
 	$(RANLIB) libmap_editor.a
@@ -28,3 +32,8 @@ libmap_editor.a : $(COBJS)
 clean :
 	@rm -f *.o *.mod *.MOD *.a *~ map_editor
 
+
+# printing objects
+.PHONY: sayhello
+sayhello:
+	echo '$(COBJS)'
