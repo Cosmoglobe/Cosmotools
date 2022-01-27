@@ -25,9 +25,9 @@ program map_editor
   integer(i4b)       :: iargc, lmin, lmax, lcut, nside_out, unit, i, l, m, n, seed
   integer(i4b)       :: nside, ordering, nmaps, component, s_max, ncol, nsim, verbose
   character(len=3)   :: suffix
-  character(len=256) :: mapname_in1, mapname_in2, infofile, mapname_out, maskfile, rmsfile
-  character(len=256) :: beamfile_in, beamfile_out, option, bandpass_in, output_file, simfile_name
-  character(len=256) :: string_real, string_int, operation, beaminfo, covartype, map2mask_file, outprefix
+  character(len=512) :: mapname_in1, mapname_in2, infofile, mapname_out, maskfile, rmsfile
+  character(len=512) :: beamfile_in, beamfile_out, option, bandpass_in, output_file, simfile_name
+  character(len=512) :: string_real, string_int, operation, beaminfo, covartype, map2mask_file, outprefix
   real(dp)           :: value, sigma_0, rms, cl0, r_fill
   real(dp)           :: fwhm_in, fwhm_out, md(4), fact, f(3)
 
@@ -54,7 +54,7 @@ program map_editor
      write(*,*) '       ---- COMMON OPERATIONS ----'
      write(*,*) '       smooth, ud_grade, subtract_mono_dipole, fit_gain_offset,'
      write(*,*) '       fit_gain_offset_dipole, mask2misspix, fix_monopole,'
-     write(*,*) '       smooth_rms, smooth_rms_quick'
+     write(*,*) '       smooth_rms'
      write(*,*) ''
      write(*,*) '       ---- PRINT OPERATIONS ----'
      write(*,*) '       print_stats (stats), print_stats_col, print_map_to_ascii,'
@@ -503,86 +503,15 @@ program map_editor
 
      call write_result_map(mapname_out, nside, ordering, header, map, suffix=='_dp')
 
-  else if (trim(operation) == 'smooth_rms_quick') then
-     if (iargc() < 10) then
-        write(*,*) ''
-        write(*,*) '   Usage:  map_editor smooth_rms_quick [beam id] [input filename] [lmin] [lmax]'
-        write(*,*) '               [nside_out] [input beam] [output beam]'
-        write(*,*) '               [output filename] [seed] [radius fill in pixels; optional]'
-        write(*,*) ''
-        stop
-     end if
-
-     call getarg(2,beaminfo)
-     call getarg(3,mapname_in1)
-     call getarg(4,string_int)
-     read(string_int,*) lmin
-     call getarg(5,string_int)
-     read(string_int,*) lmax
-     call getarg(6,string_int)
-     read(string_int,*) nside
-     call getarg(10,string_int)
-     read(string_int,*) seed
-
-     simfile_name='none'
-
-     if (iargc() == 11) then
-        call getarg(11,string_int)
-        read(string_int,*) r_fill
-     else
-        r_fill = -1.d0
-     end if
-
-     nsim = 5 ! only use 5 sims for the fast estimation 
-     verbose = 0
-
-     if (trim(beaminfo) == 'f2f') then
-        ! Input beam from file, output beam from file
-        call getarg(7,beamfile_in)
-        call getarg(8,beamfile_out)
-        call smooth_rms_true(mapname_in1, r_fill, lmin, lmax, nside, ordering, nmaps, map, header, &
-             & seed, nsim, verbose, simfile_name, beamfile_in=beamfile_in, beamfile_out=beamfile_out)
-     else if (trim(beaminfo) == 'f2g') then
-        ! Input beam from file, output beam from gaussian
-        call getarg(7,beamfile_in)
-        call getarg(8,string_real)
-        read(string_real,*) fwhm_out
-        call smooth_rms_true(mapname_in1, r_fill, lmin, lmax, nside, ordering, nmaps, map, header, &
-             & seed, nsim, verbose, simfile_name, beamfile_in=beamfile_in, fwhm_out=fwhm_out)
-     else if (trim(beaminfo) == 'g2f') then
-        ! Input beam from gaussian, output beam from file
-        call getarg(7,string_real)
-        read(string_real,*) fwhm_in
-        call getarg(8,beamfile_out)
-        call smooth_rms_true(mapname_in1, r_fill, lmin, lmax, nside, ordering, nmaps, map, header, &
-             & seed, nsim, verbose, simfile_name, fwhm_in=fwhm_in, beamfile_out=beamfile_out)
-     else if (trim(beaminfo) == 'g2g') then
-        ! Input beam from gaussian, output beam from gaussian
-        call getarg(7,string_real)
-        read(string_real,*) fwhm_in
-        call getarg(8,string_real)
-        read(string_real,*) fwhm_out
-        call smooth_rms_true(mapname_in1, r_fill, lmin, lmax, nside, ordering, nmaps, map, header, &
-             & seed, nsim, verbose, simfile_name, fwhm_in=fwhm_in, fwhm_out=fwhm_out)
-     else
-        write(*,*) 'Invalid beam option. Exiting.'
-        stop
-     end if
-
-     call getarg(9,mapname_out)
-
-     call write_result_map(mapname_out, nside, ordering, header, map, suffix=='_dp')
 
   else if (trim(operation) == 'smooth_rms') then
-     if (iargc() < 11) then
+     if (iargc() < 9) then
         write(*,*) ''
         write(*,*) '   Usage:  map_editor smooth_rms [beam id] [input filename] [lmin] [lmax]'
         write(*,*) '               [nside_out] [input beam] [output beam] [output filename]'
-        write(*,*) '               [seed] [N_sims] [OPTIONS]'
         write(*,*) ''        
         write(*,*) '   Options: -verbose <integer>   : add more output to terminal (1: per sim, 2:debug) '        
         write(*,*) '            -rfill <integer>     : radius of pixels to fill in bad pixels'        
-        write(*,*) '            -sim_rms <string>    : outputs the simulated RMS used for scaling to file given by input'        
         stop
      end if
 
@@ -594,17 +523,13 @@ program map_editor
      read(string_int,*) lmax
      call getarg(6,string_int)
      read(string_int,*) nside
-     call getarg(10,string_int)
-     read(string_int,*) seed
-     call getarg(11,string_int)
-     read(string_int,*) nsim
 
      verbose = 0
      r_fill = -1.d0
 
      simfile_name='none'
 
-     i = 12
+     i = 10
      do while (i <= iargc())
         call getarg(i,string_int)
         if (trim(string_int) == '-verbose') then
@@ -614,9 +539,6 @@ program map_editor
         else if (trim(string_int) == '-rfill') then
            call getarg(i+1,string_int)
            read(string_int,*) r_fill
-           i = i+1
-        else if (trim(string_int) == '-sim_rms') then
-           call getarg(i+1,simfile_name)
            i = i+1
         else
            write(*,*) 'Unknown option', trim(string_int)
@@ -630,21 +552,21 @@ program map_editor
         call getarg(7,beamfile_in)
         call getarg(8,beamfile_out)
         call smooth_rms_true(mapname_in1, r_fill, lmin, lmax, nside, ordering, nmaps, map, header, &
-             & seed, nsim, verbose, simfile_name, beamfile_in=beamfile_in, beamfile_out=beamfile_out)
+             & verbose, beamfile_in=beamfile_in, beamfile_out=beamfile_out)
      else if (trim(beaminfo) == 'f2g') then
         ! Input beam from file, output beam from gaussian
         call getarg(7,beamfile_in)
         call getarg(8,string_real)
         read(string_real,*) fwhm_out
         call smooth_rms_true(mapname_in1, r_fill, lmin, lmax, nside, ordering, nmaps, map, header, &
-             & seed, nsim, verbose, simfile_name, beamfile_in=beamfile_in, fwhm_out=fwhm_out)
+             & verbose, beamfile_in=beamfile_in, fwhm_out=fwhm_out)
      else if (trim(beaminfo) == 'g2f') then
         ! Input beam from gaussian, output beam from file
         call getarg(7,string_real)
         read(string_real,*) fwhm_in
         call getarg(8,beamfile_out)
         call smooth_rms_true(mapname_in1, r_fill, lmin, lmax, nside, ordering, nmaps, map, header, &
-             & seed, nsim, verbose, simfile_name, fwhm_in=fwhm_in, beamfile_out=beamfile_out)
+             & verbose, fwhm_in=fwhm_in, beamfile_out=beamfile_out)
      else if (trim(beaminfo) == 'g2g') then
         ! Input beam from gaussian, output beam from gaussian
         call getarg(7,string_real)
@@ -652,7 +574,7 @@ program map_editor
         call getarg(8,string_real)
         read(string_real,*) fwhm_out
         call smooth_rms_true(mapname_in1, r_fill, lmin, lmax, nside, ordering, nmaps, map, header, &
-             & seed, nsim, verbose, simfile_name, fwhm_in=fwhm_in, fwhm_out=fwhm_out)
+             & verbose, fwhm_in=fwhm_in, fwhm_out=fwhm_out)
      else
         write(*,*) 'Invalid beam option. Exiting.'
         stop
@@ -662,94 +584,6 @@ program map_editor
 
      call write_result_map(mapname_out, nside, ordering, header, map, suffix=='_dp')
 
-  else if (trim(operation) == 'smooth_rms_degrade') then
-     if (iargc() < 11) then
-        write(*,*) ''
-        write(*,*) '   Usage:  map_editor smooth_rms_degrade [beam id] [input filename] [lmin]'
-        write(*,*) '           [lmax] [nside_out] [input beam] [output beam] [output filename]'
-        write(*,*) '           [seed] [N_sims] [OPTIONS]'
-        write(*,*) ''        
-        write(*,*) '   Options: -verbose <integer>   : add more output to terminal (1: per sim, 2:debug) '        
-        write(*,*) '            -rfill <integer>     : radius of pixels to fill in bad pixels'        
-        write(*,*) '            -sim_rms <string>    : outputs the simulated RMS used for scaling to file given by input'        
-        stop
-     end if
-
-     call getarg(2,beaminfo)
-     call getarg(3,mapname_in1)
-     call getarg(4,string_int)
-     read(string_int,*) lmin
-     call getarg(5,string_int)
-     read(string_int,*) lmax
-     call getarg(6,string_int)
-     read(string_int,*) nside
-     call getarg(10,string_int)
-     read(string_int,*) seed
-     call getarg(11,string_int)
-     read(string_int,*) nsim
-
-     verbose = 0
-     r_fill = -1.d0
-
-     simfile_name='none'
-
-     i = 12
-     do while (i <= iargc())
-        call getarg(i,string_int)
-        if (trim(string_int) == '-verbose') then
-           call getarg(i+1,string_int)
-           read(string_int,*) verbose
-           i = i+1
-        else if (trim(string_int) == '-rfill') then
-           call getarg(i+1,string_int)
-           read(string_int,*) r_fill
-           i = i+1
-        else if (trim(string_int) == '-sim_rms') then
-           call getarg(i+1,simfile_name)
-           i = i+1
-        else
-           write(*,*) 'Unknown option', trim(string_int)
-           stop
-        end if
-        i = i+1
-     end do
-
-     if (trim(beaminfo) == 'f2f') then
-        ! Input beam from file, output beam from file
-        call getarg(7,beamfile_in)
-        call getarg(8,beamfile_out)
-        call smooth_rms_true_degrade(mapname_in1, r_fill, lmin, lmax, nside, ordering, nmaps, map, header, &
-             & seed, nsim, verbose, simfile_name, beamfile_in=beamfile_in, beamfile_out=beamfile_out)
-     else if (trim(beaminfo) == 'f2g') then
-        ! Input beam from file, output beam from gaussian
-        call getarg(7,beamfile_in)
-        call getarg(8,string_real)
-        read(string_real,*) fwhm_out
-        call smooth_rms_true_degrade(mapname_in1, r_fill, lmin, lmax, nside, ordering, nmaps, map, header, &
-             & seed, nsim, verbose, simfile_name, beamfile_in=beamfile_in, fwhm_out=fwhm_out)
-     else if (trim(beaminfo) == 'g2f') then
-        ! Input beam from gaussian, output beam from file
-        call getarg(7,string_real)
-        read(string_real,*) fwhm_in
-        call getarg(8,beamfile_out)
-        call smooth_rms_true_degrade(mapname_in1, r_fill, lmin, lmax, nside, ordering, nmaps, map, header, &
-             & seed, nsim, verbose, simfile_name, fwhm_in=fwhm_in, beamfile_out=beamfile_out)
-     else if (trim(beaminfo) == 'g2g') then
-        ! Input beam from gaussian, output beam from gaussian
-        call getarg(7,string_real)
-        read(string_real,*) fwhm_in
-        call getarg(8,string_real)
-        read(string_real,*) fwhm_out
-        call smooth_rms_true_degrade(mapname_in1, r_fill, lmin, lmax, nside, ordering, nmaps, map, header, &
-             & seed, nsim, verbose, simfile_name, fwhm_in=fwhm_in, fwhm_out=fwhm_out)
-     else
-        write(*,*) 'Invalid beam option. Exiting.'
-        stop
-     end if
-
-     call getarg(9,mapname_out)
-
-     call write_result_map(mapname_out, nside, ordering, header, map, suffix=='_dp')
      
   else if (trim(operation) == 'shift_columns') then
 
@@ -1515,21 +1349,25 @@ contains
        write(*,*) '        map_editor smooth_zerospin g2g map.fits 2 1024 512 15. 60. smoothed.fits'
        write(*,*) ''
 
-    else if (trim(option) == 'smooth_rms_quick') then
+    else if (trim(option) == 'smooth_rms' ) then
+
        write(*,*) ''
-       write(*,*) '   The smoothing operation reads a RMS map and simultes 5 white'
-       write(*,*) '   noise maps with the input RMS. Then it computes the spherical '
-       write(*,*) '   harmonics transform, deconvolve a given beam (and pixel window),'
+       write(*,*) '   The smoothing operation reads a RMS map and smooths it with the'
+       write(*,*) '   defined beams. First it computes the variance map, as RMS is averaged'
+       write(*,*) '   in variance domain. It computes the spherical harmonics transform,'
+       write(*,*) '   deconvolve with a given beam (and pixel window),'
        write(*,*) '   convolve with a new given beam (and pixel window), and finally'
-       write(*,*) '   outputs resulting the inverse spherical harmonics transform of'
-       write(*,*) '   the white noise maps. Finally it computes the RMS of the smoothed'
-       write(*,*) '   white noise maps and scales a smoothed map of the input to match'
-       write(*,*) '   the simulated RMS amplitude.'
+       write(*,*) '   outputs the resulting inverse spherical harmonics transform of'
+       write(*,*) '   the variance map. Finally it computes the RMS by taking the square'
+       write(*,*) '   root of the smoothed variance map.'
+       write(*,*) '   Note: As it is smoothed in variance domain, the beam is the square'
+       write(*,*) '   beam of the effective beam, i.e.'
+       write(*,*) '   FWHM_eff = sqrt(1 - (FWHM_in/FWHM_out)**2) * FWHM_out '
+       write(*,*) '   and the effective beam window function b(l) is'
+       write(*,*) '   b_eff(l) = b_out(l)/b_in(l),'
+       write(*,*) '   and the the square beam window function is'
+       write(*,*) '   b_sq(l) = b_eff(l)^1/2'
        write(*,*) '   '
-       write(*,*) '   This is the most accurate (and correct) way of smoothing RMS maps.'
-       write(*,*) '   To get a more accurate result one have to use many simulations,'
-       write(*,*) "   see 'smooth_rms' or 'smooth_rms_degrade'"
-       write(*,*) ''
        write(*,*) '   Both the input and output beams can be given on two formats,'
        write(*,*) '   either in the form of the FWHM of a Gaussian beam, or as a'
        write(*,*) '   FITS ascii table.'
@@ -1551,68 +1389,20 @@ contains
        write(*,*) ''
        write(*,*) '   The command line format is as follows:'
        write(*,*) ''
-       write(*,*) '        map_editor smooth_rms_quick [beam id] [input filename] [lmin] [lmax]'
-       write(*,*) '               [nside_out] [input beam] [output beam] [output filename]'
-       write(*,*) '               [seed] [r_fill; pixel radius for bad pixels, optional]'
-       write(*,*) ''
-       write(*,*) '   Example usage:'
-       write(*,*) ''
-       write(*,*) '        map_editor smooth_rms_quick g2g rms_map.fits 0 1024 512 5. 60. rms_smoothed.fits 46261 '
-       write(*,*) ''
-
-    else if (trim(option) == 'smooth_rms' .or. trim(operation) == 'smooth_rms_degrade' ) then
-
-       write(*,*) ''
-       write(*,*) '   The smoothing operation reads a RMS map and simultes N white'
-       write(*,*) '   noise maps with the input RMS. Then it computes the spherical '
-       write(*,*) '   harmonics transform, deconvolve a given beam (and pixel window),'
-       write(*,*) '   convolve with a new given beam (and pixel window), and finally'
-       write(*,*) '   outputs resulting the inverse spherical harmonics transform of'
-       write(*,*) '   the white noise maps. Finally it computes the RMS of the smoothed'
-       write(*,*) '   white noise maps and scales a smoothed map of the input to match'
-       write(*,*) '   the simulated RMS amplitude. Note: the input RMS map is smoothed'
-       write(*,*) '   in variance-domain (i.e. RMS^2)'
-       write(*,*) '   '
-       write(*,*) '   This is the most accurate (and correct) way of smoothing RMS maps.'
-       write(*,*) '   To get a more accurate result one have to use MORE simulations.'
-       write(*,*) '   '
-       write(*,*) "   The 'smooth_rms_degrade' option will degrade the input RMS map to"
-       write(*,*) '   the output Nside before computing the white noise maps. This is also'
-       write(*,*) '   done in variance-domain.'
-       write(*,*) ''
-       write(*,*) '   Both the input and output beams can be given on two formats,'
-       write(*,*) '   either in the form of the FWHM of a Gaussian beam, or as a'
-       write(*,*) '   FITS ascii table.'
-       write(*,*) ''
-       write(*,*) '   The beam id must be one of the following strings: '
-       write(*,*) ''
-       write(*,*) '        f2f -> Input and output beams are read from files'
-       write(*,*) '        f2g -> Input beam is read from file, output beam is Gaussian'
-       write(*,*) '        g2f -> Input beam is Gaussian, output beam is read from file'
-       write(*,*) '        g2g -> Input and output beams are Gaussian'
-       write(*,*) ''
-       write(*,*) '   If a file is requested, then [input/output beam] must be a filename.'
-       write(*,*) '   If a Gaussian is requested, then it must be a floating point number,'
-       write(*,*) '   giving the FWHM of the Gaussian beam in arcmin.'
-       write(*,*) ''
-       write(*,*) '   The variables lmin, lmax, seed and Nside may formally be choosen freely '
-       write(*,*) '   (independent of the input map), but a good rule of thumb is'
-       write(*,*) '   lmax < 3*Nside_in, and preferrably even lmax < 2*Nside_in.'
-       write(*,*) ''
-       write(*,*) '   The command line format is as follows:'
-       write(*,*) ''
-       write(*,*) '   Usage:  map_editor {smooth_rms, smooth_rms_degrade} [beam id] '
-       write(*,*) '           [input filename] [lmin] [lmax] [nside_out] [input beam] '
-       write(*,*) '           [output beam] [output filename] [seed] [N_sims] [OPTIONS]'
+       write(*,*) '   Usage:  map_editor smooth_rms [beam id] [input filename]'
+       write(*,*) '           [lmin] [lmax] [nside_out] [input beam] '
+       write(*,*) '           [output beam] [output filename] [OPTIONS]'
        write(*,*) ''        
        write(*,*) '   Options: -verbose <integer>   : add more output to terminal (1: per sim, 2:debug) '        
        write(*,*) '            -rfill <integer>     : radius of pixels to fill in bad pixels'        
        write(*,*) ''        
        write(*,*) '   Example usage:'
        write(*,*) ''
-       write(*,*) '        map_editor smooth_rms g2g rms_map.fits 0 1024 512 5. 60. '
-       write(*,*) '             rms_smoothed.fits 46261 100'
+       write(*,*) '   map_editor smooth_rms g2g rms_map.fits 0 1024 512 5. 60. '
+       write(*,*) '             rms_smoothed.fits'
        write(*,*) ''
+       
+
        
     else if (trim(option) == 'add_gaussian_noise') then
 

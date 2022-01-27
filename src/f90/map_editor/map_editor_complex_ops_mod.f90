@@ -615,7 +615,7 @@ contains
   subroutine compute_index_map
     implicit none
 
-    character(len=256) :: mapname1, mapname2, outfile, tmp
+    character(len=512) :: mapname1, mapname2, outfile, tmp
     integer(i4b)       :: i, nside, nside2, ordering, ordering2, nmaps, nmaps2, npix, npix2
     real(dp)           :: nu1, nu2, nullval
     logical(lgt)       :: anynull
@@ -895,7 +895,7 @@ contains
     implicit none
 
     integer(i4b)       :: i, n, nside, npix, nmaps, unit, col, nlist, nsrc
-    character(len=128) :: partext, convention, infile, outfile, beamfile
+    character(len=512) :: partext, convention, infile, outfile, beamfile
     character(len=1024) :: line
     real(dp)           :: vec(3), cvec(3), r, sigma, dOmega, Omega, fwhm, norm, unit_conv
     real(dp)           :: u(3), v(3), len_u, len_v, theta, flux, z, sgn
@@ -1079,7 +1079,7 @@ contains
     real(dp)           :: lat, lon, fwhm_Q, ell_Q, ell_dir_Q, amp_Q, psi, beta, nu, nu0, aq, bq, cq
     real(dp)           :: fwhm_U, ell_U, ell_dir_U, au, bu, cu, amp_U, sigma_U
     real(dp)           :: vec(3), cvec(3), x, y, f, sigma_Q, sx_Q, sy_Q, sx_U, sy_U, cos2psi, sin2psi, ratio
-    character(len=128) :: filename
+    character(len=512) :: filename
     character(len=80), dimension(180) :: header
 
     real(dp),     allocatable, dimension(:,:) :: map
@@ -1295,7 +1295,7 @@ contains
     integer(i4b)       :: i, j, unit, npix, nummaps, nside_in, ordering_in, nmaps_in
     real(dp)           :: temp_r, weight, nullval, missval = -1.6375e30
     logical(lgt)       :: anynull
-    character(len=128) :: filename
+    character(len=512) :: filename
 
     real(dp), allocatable, dimension(:,:)   :: map
 
@@ -1408,7 +1408,7 @@ contains
     real(dp)           :: nullval,missval
     real(dp)           :: nullval_dp
     logical(lgt)       :: anynull
-    character(len=128) :: infile
+    character(len=512) :: infile
     integer(i4b)       :: ordering, nmaps
 
     integer(i4b) :: nside, npix
@@ -1447,7 +1447,7 @@ contains
     real(dp)           :: nullval,missval
     real(dp)           :: nullval_dp,val_comp,zero_val
     logical(lgt)       :: anynull
-    character(len=128) :: infile,temptex
+    character(len=512) :: infile,temptex
     integer(i4b)       :: ordering, nmaps
 
     integer(i4b) :: nside, npix
@@ -1508,7 +1508,7 @@ contains
     real(dp)           :: nullval,missval
     real(dp)           :: nullval_dp,val_comp
     logical(lgt)       :: anynull
-    character(len=128) :: infile,temptex
+    character(len=512) :: infile,temptex
     integer(i4b)       :: ordering, nmaps
 
     integer(i4b) :: nside, npix
@@ -1572,7 +1572,7 @@ contains
     real(dp)           :: nullval,missval
     real(dp)           :: nullval_dp,val_comp,zero_val
     logical(lgt)       :: anynull
-    character(len=128) :: infile, temptex, outfile
+    character(len=512) :: infile, temptex, outfile
     integer(i4b)       :: ordering, ordering2, nmaps, nmaps2
 
     integer(i4b) :: nside, nside2, npix
@@ -1750,7 +1750,7 @@ contains
     real(dp)           :: nullval
     real(dp)           :: sigma_sq, nullval_dp
     logical(lgt)       :: anynull
-    character(len=128) :: winfile_in, winfile_out
+    character(len=512) :: winfile_in, winfile_out
     character(len=4)   :: ntext
     type(planck_rng)   :: rng_handle
 
@@ -1758,7 +1758,7 @@ contains
     complex(dpc), allocatable, dimension(:,:,:) :: alms
     real(dp),     pointer,     dimension(:,:)   :: weights
     real(dp),     allocatable, dimension(:,:)   :: beam
-    character(len=256), allocatable, dimension(:) :: filenames
+    character(len=512), allocatable, dimension(:) :: filenames
     real(dp),                  dimension(2)     :: zbounds = 0.d0
 
     numfiles = iargc()-3
@@ -1806,11 +1806,11 @@ contains
        & output_EB, beamfile_in, beamfile_out, fwhm_in, fwhm_out)
     implicit none
 
-    character(len=256),                         intent(in)           :: infile
+    character(len=512),                         intent(in)           :: infile
     real(dp),                                   intent(inout)        :: r_fill
     integer(i4b),                               intent(in)           :: nside, lmin, lmax
     real(dp),                                   intent(in), optional :: fwhm_in, fwhm_out
-    character(len=256),                         intent(in), optional :: beamfile_in, beamfile_out
+    character(len=512),                         intent(in), optional :: beamfile_in, beamfile_out
     integer(i4b),                               intent(out)          :: nmaps, ordering
     logical(lgt),                               intent(in)           :: output_EB
     real(dp),          pointer, dimension(:,:)                       :: map
@@ -1821,7 +1821,7 @@ contains
     real(dp)           :: nullval, tot
     real(dp)           :: sigma_sq, nullval_dp, vec(3), theta, phi, rf
     logical(lgt)       :: anynull
-    character(len=128) :: winfile_in, winfile_out
+    character(len=512) :: winfile_in, winfile_out
     character(len=4)   :: ntext
 
     complex(dpc), allocatable, dimension(:,:,:) :: alms
@@ -1988,11 +1988,11 @@ contains
        & output_EB, beamfile_in, beamfile_out, fwhm_in, fwhm_out)
     implicit none
 
-    character(len=128),                         intent(in)           :: infile
+    character(len=512),                         intent(in)           :: infile
     real(dp),                                   intent(inout)        :: r_fill
     integer(i4b),                               intent(in)           :: nside, lmin, lmax
     real(dp),                                   intent(in), optional :: fwhm_in, fwhm_out
-    character(len=128),                         intent(in), optional :: beamfile_in, beamfile_out
+    character(len=512),                         intent(in), optional :: beamfile_in, beamfile_out
     integer(i4b),                               intent(out)          :: nmaps, ordering
     logical(lgt),                               intent(in)           :: output_EB
     real(dp),           pointer, dimension(:,:)                      :: map
@@ -2003,7 +2003,7 @@ contains
     real(dp)           :: nullval, tot
     real(dp)           :: sigma_sq, nullval_dp, vec(3), theta, phi, rf
     logical(lgt)       :: anynull
-    character(len=128) :: winfile_in, winfile_out
+    character(len=512) :: winfile_in, winfile_out
     character(len=4)   :: ntext
 
     complex(dpc), allocatable, dimension(:,:,:) :: alms
@@ -2182,362 +2182,16 @@ contains
 
   end subroutine smooth_map_zerospin
 
-  subroutine smooth_rms_old(infile, r_fill, lmin, lmax, nside, ordering, nmaps2, map2, header, &
-       & output_EB, seed, beamfile_in, beamfile_out, fwhm_in, fwhm_out)
+  subroutine smooth_rms_true(infile, r_fill, lmin, lmax, nside, ordering, & 
+       nmaps_in, map_out, header, verbose, beamfile_in, beamfile_out, fwhm_in, fwhm_out)
     implicit none
 
-    character(len=256),                         intent(in)           :: infile
+    character(len=512),                         intent(in)           :: infile
     real(dp),                                   intent(inout)        :: r_fill
-    integer(i4b),                               intent(in)           :: nside, lmin, lmax, seed
+    integer(i4b),                               intent(in)           :: nside, lmin, lmax
+    integer(i4b),                               intent(in)           :: verbose
     real(dp),                                   intent(in), optional :: fwhm_in, fwhm_out
-    character(len=256),                         intent(in), optional :: beamfile_in, beamfile_out
-    integer(i4b),                               intent(out)          :: nmaps2, ordering
-    logical(lgt),                               intent(in)           :: output_EB
-    real(dp),          pointer, dimension(:,:)                       :: map2
-    character(len=80),          dimension(180)                       :: header
-
-    integer(i4b)       :: nside_in, npix, npix_in, nmaps, lmax2
-    integer(i4b)       :: i, j, k, l, m, p, r, nlist, sum_pix
-    real(dp)           :: nullval, tot, missval, a_scale, sq_sum, avg_n, scale_in, scale_out
-    real(dp)           :: sigma_sq, nullval_dp, vec(3), theta, phi, rf
-    logical(lgt)       :: anynull
-    character(len=128) :: winfile_in, winfile_out
-    character(len=4)   :: ntext
-    type(planck_rng)   :: rng_handle
-
-    complex(dpc), allocatable, dimension(:,:,:) :: alms,alms2
-    real(dp),     allocatable, dimension(:,:)   :: map_in, map_buffer, map_wn, map_wn_in, map_wn_out
-    real(dp),     allocatable, dimension(:,:)   :: map, map_in2
-    real(dp),     pointer,     dimension(:,:)   :: pixwin_in, pixwin_out,pixwin_in2
-    real(dp),     pointer,     dimension(:,:)   :: weights,weights2
-    real(dp),     allocatable, dimension(:,:)   :: beam_in, beam_out, beam_zero, beam_in_wn, beam_out_wn
-    real(dp),                  dimension(2)     :: zbounds = 0.d0
-    integer(i4b), allocatable, dimension(:)     :: listpix
-
-    missval = -1.6375d30
-    
-    ! Read input map
-    i = getsize_fits(infile, nside=nside_in, ordering=ordering, nmaps=nmaps2)
-    if (nmaps2 /= 1 .and. nmaps2 /= 3) then
-       if (nmaps2 < 3) then
-          nmaps2 = 1
-       else
-          nmaps2 = 3
-       end if
-    end if
-
-    nmaps   = 1  ! we are smoothong all RMS maps like temperature maps (spin-zero-maps)
-    npix    = nside2npix(nside)
-    npix_in = nside2npix(nside_in)
-    lmax2=3*nside_in
-
-    allocate(map_in(0:npix_in-1,nmaps),map_wn(0:npix_in-1,nmaps), map_buffer(0:npix_in-1,nmaps))
-    allocate(map(0:npix-1,nmaps),map_wn_in(0:npix_in-1,nmaps),map_wn_out(0:npix_in-1,nmaps))
-    allocate(map2(0:npix-1,nmaps2),map_in2(0:npix_in-1,nmaps2))
-    allocate(listpix(0:npix_in-1))
-    allocate(alms(nmaps, 0:lmax, 0:lmax))
-    allocate(alms2(nmaps, 0:lmax2, 0:lmax2))
-    call rand_init(rng_handle, seed)
-
-
-    call read_bintab(infile, map_in2, npix_in, nmaps2, nullval, anynull, header=header)
-
-    if (ordering == 2) then
-       do i = 1, nmaps2
-          call convert_nest2ring(nside_in, map_in2(0:npix_in-1,i))
-       end do
-    end if
-
-    ! Read pixel windows
-    call read_pixwin(nside_in, nmaps, pixwin_in)
-    call read_pixwin(nside, nmaps, pixwin_out)
-    call read_ringweights(nside_in, nmaps, weights)
-
-    ! Create or read beams
-    allocate(beam_in(0:lmax, nmaps))
-    allocate(beam_out(0:lmax, nmaps))
-    allocate(beam_zero(0:lmax2, nmaps))
-    allocate(beam_in_wn(0:lmax2, nmaps))
-    allocate(beam_out_wn(0:lmax2, nmaps))
-
-    if (present(fwhm_in)) then
-       call generate_beam(abs(fwhm_in), lmax, beam_in)
-       if (fwhm_in < 0.) beam_in = 1.d0 / beam_in
-    else
-       call generate_beam(0.d0, lmax, beam_in, beamfile_in)
-       !if (nmaps == 3) then
-       !   beam_in(:,2) = beam_in(:,1)
-       !   beam_in(:,3) = beam_in(:,1)
-       !   write(*,*) 'Warning: Setting polarized beams equal to temperature beam'
-       !end if
-    end if
-
-    if (present(fwhm_out)) then
-       call generate_beam(abs(fwhm_out), lmax, beam_out)
-    else
-       call generate_beam(0.d0, lmax, beam_out, beamfile_out)
-       !if (nmaps == 3) then
-       !   beam_out(:,2) = beam_out(:,1)
-       !   beam_out(:,3) = beam_out(:,1)
-       !   write(*,*) 'Warning: Setting polarized beams equal to temperature beam'
-       !end if
-    end if
-
-    if (present(fwhm_in)) then
-       call generate_beam(abs(fwhm_in), lmax2, beam_in_wn)
-       if (fwhm_in < 0.) beam_in_wn = 1.d0 / beam_in_wn
-    else
-       call generate_beam(0.d0, lmax2, beam_in_wn, beamfile_in)
-       !if (nmaps == 3) then
-       !   beam_in(:,2) = beam_in(:,1)
-       !   beam_in(:,3) = beam_in(:,1)
-       !   write(*,*) 'Warning: Setting polarized beams equal to temperature beam'
-       !end if
-    end if
-
-    if (present(fwhm_out)) then
-       call generate_beam(abs(fwhm_out), lmax2, beam_out_wn)
-    else
-       call generate_beam(0.d0, lmax2, beam_out_wn, beamfile_out)
-       !if (nmaps == 3) then
-       !   beam_out(:,2) = beam_out(:,1)
-       !   beam_out(:,3) = beam_out(:,1)
-       !   write(*,*) 'Warning: Setting polarized beams equal to temperature beam'
-       !end if
-    end if
-
-    call generate_beam(0.d0, lmax2, beam_zero) !zero fwhm
-
-
-    !Do one map at the time, all has to be smoothed as spin-zero-maps (i.e. Temp maps)
-    do p = 1, nmaps2
-       write(*,*) ""
-       write(*,*) "map", p, "of", nmaps2
-
-       map_in(:,1) = map_in2(:,p) !copy input RMS map, pol = map_count
-
-
-
-       ! fill in missing pixels before smoothing
-       map_buffer = map_in
-       do j = 1, nmaps
-          do i = 0, npix_in-1
-             if (abs(map_in(i,j)) > 1e30) then
-                if (r_fill >= 0.d0) then
-                   call pix2vec_ring(nside_in, i, vec)
-                   do r = 1, r_fill
-                      rf = (r+0.2d0) * sqrt(4.d0*pi/npix_in)
-                      call query_disc(nside_in, vec, rf, listpix, nlist)
-                      tot = 0.d0
-                      m   = 0.d0
-                      do k = 0, nlist-1
-                         if (abs(map_buffer(listpix(k),j)) < 1.d30) then
-                            tot = tot + map_buffer(listpix(k),j)
-                            m   = m   + 1
-                         end if
-                      end do
-                      if (m > 0) then
-                         map_in(i,j) = tot / m
-                         exit
-                      end if
-                   end do
-
-                   if (r > r_fill) then
-                      call pix2ang_ring(nside_in, i, theta, phi)
-                      write(*,*) 'Error: Filter did not return valid pixel; increase r_fill'
-                      write(*,*) '     p         = ', i
-                      write(*,*) '     theta     = ', 90.d0-theta*180/pi
-                      write(*,*) '     phi       = ', phi*180/pi
-                      write(*,*) '     radius    = ', r_fill
-                      write(*,*) '     neighbors = ', listpix(0:nlist-1)
-                      write(*,*) '     vals      = ', map_buffer(listpix(0:nlist-1),j)
-                      stop
-                   end if
-                else
-                   map_in(i,j) = 0.d0
-                end if
-             end if
-          end do
-       end do
-       
-       
-       ! Compute the spherical harmonics transform of RMS map
-       write(*,*) '   Smoothing RMS map'
-
-       alms = cmplx(0.,0.)
-       if (nmaps == 1) then
-          call map2alm(nside_in, lmax, lmax, map_in(:,1), alms, zbounds, weights)
-       else
-          call map2alm(nside_in, lmax, lmax, map_in, alms, zbounds, weights)
-       end if
-
-       ! Deconvolve old beam and pixel window, and convolve new beam and pixel window
-       do i = 1, nmaps
-          alms(i,0:lmin-1,:) = cmplx(0.,0.)
-          do l = lmin, lmax
-             if (abs(pixwin_in(l,i)*beam_in(l,i)) < 0.00000001d0) then
-                if (l > 1 .or. i == 1) write(*,*) 'Multipole l = ', l, ' set to zero'
-                alms(i,l,0:l) = cmplx(0.,0.)
-             else
-                alms(i,l,0:l) = alms(i,l,0:l) * &
-                     & (pixwin_out(l,i)*beam_out(l,i)) / (pixwin_in(l,i)*beam_in(l,i))
-             end if
-          end do
-       end do
-
-       ! Compute the inverse spherical harmonics
-       if (nmaps == 1) then
-          call alm2map(nside, lmax, lmax, alms, map(:,1))
-       else
-          if (output_EB) then
-             do i = 1, nmaps
-                call alm2map(nside, lmax, lmax, alms(i:i,:,:), map(:,i))
-             end do
-          else
-             call alm2map(nside, lmax, lmax, alms, map)       
-          end if
-       end if
-
-       map2(:,p) = map(:,1)
-
-
-    end do
-    
-    ! Compute the spherical harmonics transform of white noise map
-    write(*,*) '   Smoothing white noise map'
-
-    !Create random white noise map (unit var)
-    do j = 1, nmaps
-       do i = 0, npix-1
-          map_wn(i,j) = 1.d0 * rand_gauss(rng_handle)
-       end do
-    end do
-
-
-    alms2 = cmplx(0.,0.)
-    if (nmaps == 1) then
-       call map2alm(nside_in, lmax2, lmax2, map_wn(:,1), alms2, zbounds, weights)
-    else
-       call map2alm(nside_in, lmax2, lmax2, map_wn, alms2, zbounds, weights)
-    end if
-
-    ! Deconvolve old beam and pixel window, and convolve new beam and pixel window
-    do i = 1, nmaps
-       alms2(i,0:lmin-1,:) = cmplx(0.,0.)
-       do l = lmin, lmax2
-          if (abs(pixwin_in(l,i)*beam_zero(l,i)) < 0.00000001d0) then
-             if (l > 1 .or. i == 1) write(*,*) 'Multipole l = ', l, ' set to zero'
-             alms2(i,l,0:l) = cmplx(0.,0.)
-          else
-             alms2(i,l,0:l) = alms2(i,l,0:l) * &
-                  & (pixwin_in(l,i)*beam_in_wn(l,i)) / (pixwin_in(l,i)*beam_zero(l,i))
-          end if
-       end do
-    end do
-
-    ! Compute the inverse spherical harmonics
-    if (nmaps == 1) then
-       call alm2map(nside_in, lmax2, lmax2, alms2, map_wn_in(:,1))
-    else
-       if (output_EB) then
-          do i = 1, nmaps
-             call alm2map(nside_in, lmax2, lmax2, alms2(i:i,:,:), map_wn_in(:,i))
-          end do
-       else
-          call alm2map(nside_in, lmax2, lmax2, alms2, map_wn_in)       
-       end if
-    end if
-
-
-    alms2 = cmplx(0.,0.)
-    if (nmaps == 1) then
-       call map2alm(nside_in, lmax2, lmax2, map_wn(:,1), alms2, zbounds, weights)
-    else
-       call map2alm(nside_in, lmax2, lmax2, map_wn, alms2, zbounds, weights)
-    end if
-
-    ! Deconvolve old beam and pixel window, and convolve new beam and pixel window
-    do i = 1, nmaps
-       alms2(i,0:lmin-1,:) = cmplx(0.,0.)
-       do l = lmin, lmax2
-          if (abs(pixwin_in(l,i)*beam_zero(l,i)) < 0.00000001d0) then
-             if (l > 1 .or. i == 1) write(*,*) 'Multipole l = ', l, ' set to zero'
-             alms2(i,l,0:l) = cmplx(0.,0.)
-          else
-             alms2(i,l,0:l) = alms2(i,l,0:l) * &
-                  & (pixwin_in(l,i)*beam_out_wn(l,i)) / (pixwin_in(l,i)*beam_zero(l,i))
-          end if
-       end do
-    end do
-
-    ! Compute the inverse spherical harmonics
-    if (nmaps == 1) then
-       call alm2map(nside_in, lmax2, lmax2, alms2, map_wn_out(:,1))
-    else
-       if (output_EB) then
-          do i = 1, nmaps2
-             call alm2map(nside_in, lmax2, lmax2, alms2(i:i,:,:), map_wn_out(:,i))
-          end do
-       else
-          call alm2map(nside_in, lmax2, lmax2, alms2, map_wn_out)       
-       end if
-    end if
-
-    ! Find RMS in smoothed WN maps and scale smoothed RMS 
-    avg_n = sum(map_wn_in(:,1))/npix_in
-    sq_sum = sum((map_wn_in(:,1)-avg_n)**2)
-    scale_in = dsqrt(sq_sum/npix_in)
-
-    avg_n = sum(map_wn_out(:,1))/npix_in
-    sq_sum = sum((map_wn_out(:,1)-avg_n)**2)
-    scale_out = dsqrt(sq_sum/npix_in)
-    
-    a_scale=(scale_out/scale_in)*(1.d0*nside/nside_in) !scaling due to smoothing and due to down-grading
-
-    write(*,*) 'scaling factor ',a_scale
-
-    do i = 1,nmaps2
-       map2(:,i) = map2(:,i) * a_scale
-    end do
-    
-
-    
-    if (ordering == 2) then
-       do i = 1, nmaps2
-          call convert_ring2nest(nside, map2(:,i))
-       end do
-    end if
-
-    
-    deallocate(listpix, map_buffer)
-    deallocate(weights)
-    deallocate(pixwin_in)
-    deallocate(pixwin_out)
-    deallocate(beam_in)
-    deallocate(beam_out)
-    deallocate(beam_out_wn)
-    deallocate(beam_in_wn)
-    deallocate(beam_zero)
-    deallocate(map_in)
-    deallocate(map_in2)
-    deallocate(map)
-    deallocate(map_wn)
-    deallocate(map_wn_in)
-    deallocate(map_wn_out)
-    deallocate(alms)
-    deallocate(alms2)
-
-  end subroutine smooth_rms_old
-
-  subroutine smooth_rms_true(infile, r_fill, lmin, lmax, nside, ordering, nmaps_in, map_out, header, &
-       & seed, nsim, verbose, simfile_name, beamfile_in, beamfile_out, fwhm_in, fwhm_out)
-    implicit none
-
-    character(len=256),                         intent(in)           :: infile, simfile_name
-    real(dp),                                   intent(inout)        :: r_fill
-    integer(i4b),                               intent(in)           :: nside, lmin, lmax, seed, nsim, verbose
-    real(dp),                                   intent(in), optional :: fwhm_in, fwhm_out
-    character(len=256),                         intent(in), optional :: beamfile_in, beamfile_out
+    character(len=512),                         intent(in), optional :: beamfile_in, beamfile_out
     integer(i4b),                               intent(out)          :: nmaps_in, ordering
     real(dp),          pointer, dimension(:,:)                       :: map_out
     character(len=80),          dimension(180)                       :: header
@@ -2547,12 +2201,12 @@ contains
     real(dp)           :: nullval, tot, missval, a_scale
     real(dp)           :: sigma_sq, nullval_dp, vec(3), theta, phi, rf
     logical(lgt)       :: anynull
-    character(len=128) :: winfile_in, winfile_out
+    character(len=512) :: winfile_in, winfile_out
     character(len=4)   :: ntext
     type(planck_rng)   :: rng_handle
 
     complex(dpc), allocatable, dimension(:,:,:) :: alms
-    real(dp),     allocatable, dimension(:,:)   :: map_in, wn_in, wn_out, map_buffer
+    real(dp),     allocatable, dimension(:,:)   :: map_in, map_buffer
     real(dp),     pointer,     dimension(:,:)   :: pixwin_in, pixwin_out
     real(dp),     pointer,     dimension(:,:)   :: weights
     real(dp),     allocatable, dimension(:,:)   :: beam_in, beam_out
@@ -2575,11 +2229,6 @@ contains
     npix    = nside2npix(nside)
     npix_in = nside2npix(nside_in)
 
-    if (nside_in < nside) then
-       write(*,*) 'Nside of output is larger than that of input. Exiting.'
-       stop
-    end if
-
     if (present(fwhm_in) .and. present(fwhm_out)) then
        if (fwhm_out < fwhm_in) then
           write(*,*) 'Beam of output is smaller than that of input. Exiting.'
@@ -2592,12 +2241,9 @@ contains
 
     allocate(map_in(0:npix_in-1,nmaps_in))
     allocate(map_buffer(0:npix_in-1,nmaps_in))
-    allocate(wn_in(0:npix_in-1,nmaps))
-    allocate(wn_out(0:npix-1,nmaps))
     allocate(map_out(0:npix-1,nmaps_in))
     allocate(listpix(0:npix_in-1))
     allocate(alms(nmaps, 0:lmax, 0:lmax))
-    call rand_init(rng_handle, seed)
 
     call read_bintab(infile, map_in, npix_in, nmaps_in, nullval, anynull, header=header)
 
@@ -2683,25 +2329,29 @@ contains
     end do
 
 
-    write(*,*) ""
-    write(*,*) "Smoothing input (in Variance domain)"
-    write(*,*) ""
+    if (verbose > 0) then
+       write(*,*) ""
+       write(*,*) "Smoothing input (in Variance domain)"
+       write(*,*) ""
+    end if
 
     !smooth input RMS map to map_out
-    !Do one map at a time; has to be smoothed as spin-zero-maps (i.e. Temp maps)
-    !The smoothing has to be done on the variance map with a beam that is FWHM/sqrt(2),
-    !where FWHM is the effective beam given by
+    ! Do one map at a time; has to be smoothed as spin-zero-maps (i.e. Temp maps)
+    ! The smoothing has to be done on the variance map with the square beam,
+    ! i.e., a beam that is FWHM/sqrt(2),
+    ! where FWHM is the effective beam given by
     ! FWHM = sqrt(1 - (FWHM_in/FWHM_out)**2) * FWHM_out
     ! The effective beam has the same beam weights (per l) as beam(FWHM_out)/beam(FWHM_in)
     ! so we do not need to calculate FWHM_effective, and it is not possible if we have beam files
     ! Further we use the fact that (in Stokes I, i.e. temperature)
     ! beam(fwhm') = beam(fwhm)**[(fwhm' /fwhm)**2] for all l > 0
     ! so that beam(fwhm/sqrt(2)) = beam(fwhm)**1/2 = sqrt(beam(fwhm))
-
+    
     map_buffer = map_in*map_in !getting the variance of the input
 
     do p = 1, nmaps_in
-
+       if (verbose > 1) write(*,*) "      Polarization: ",p
+          
        alms = cmplx(0.,0.)
        call map2alm(nside_in, lmax, lmax, map_buffer(:,p), alms, zbounds, weights)
        
@@ -2710,9 +2360,7 @@ contains
           alms(i,0:lmin-1,:) = cmplx(0.,0.)
           do l = lmin, lmax
              if (abs(pixwin_in(l,i)*beam_in(l,i)) < 0.00000001d0) then
-                if (verbose > 1) then
-                   if (l > 1 .or. i == 1) write(*,*) 'Multipole l = ', l, ' set to zero'
-                end if
+                if (l > 1 .or. i == 1) write(*,*) 'Multipole l = ', l, ' set to zero'
                 alms(i,l,0:l) = cmplx(0.,0.)
              else
                 !smooth with 1/sqrt(2) of effective beam
@@ -2726,90 +2374,23 @@ contains
        call alm2map(nside, lmax, lmax, alms, map_out(:,p))
     end do
 
-    deallocate(map_buffer)
 
-    allocate(map_buffer(0:npix-1,nmaps_in)) !to keep the sum of square errors of smoother WN
-    map_buffer = 0.d0
+    !take square-root of variance map to get RMS
+    map_out=dsqrt(map_out)
 
-    !simulate white noise nsim times and smooth maps like spin-0 maps
-    write(*,*) "Smoothing simulated data"
-    do s = 1, nsim
-       if (verbose > 1) then
-          write(*,*) "sim", s, "of", nsim
-       else if (verbose > 0 .and. mod(s,10) == 0) then
-          write(*,*) "sim", s, "of", nsim
-       end if
+    ! if nside in /= nside out, rescale the smoothed RMS map to ensure equal
+    ! chi-squared values 
+    if ( nside /= nside_in ) then
+       map_out=map_out*(nside*1.d0/nside_in)
 
-       !Do one map at the time, all has to be smoothed as spin-zero-maps (i.e. Temp maps)
-       do p = 1, nmaps_in
+    end if
 
-          !create white noise map from rms map
-          do i = 0,npix_in-1
-             wn_in(i,1) = map_in(i,p) * rand_gauss(rng_handle)
-          end do
-
-          
-          alms = cmplx(0.,0.)
-          call map2alm(nside_in, lmax, lmax, wn_in(:,1), alms, zbounds, weights)
-
-          ! Deconvolve old beam and pixel window, and convolve new beam and pixel window
-          do i = 1, 1
-             alms(i,0:lmin-1,:) = cmplx(0.,0.)
-             do l = lmin, lmax
-                if (abs(pixwin_in(l,i)*beam_in(l,i)) < 0.00000001d0) then
-                   alms(i,l,0:l) = cmplx(0.,0.)
-                else
-                   alms(i,l,0:l) = alms(i,l,0:l) * &
-                        & (pixwin_out(l,i)*beam_out(l,i)) / (pixwin_in(l,i)*beam_in(l,i))
-                end if
-             end do
-          end do
-
-          ! Compute the inverse spherical harmonics
-          call alm2map(nside, lmax, lmax, alms, wn_out(:,1))
-
-          !compute square error (assuming zero mean) for smoothed map and add to map_out
-          map_buffer(:,p) = map_buffer(:,p) + wn_out(:,1)*wn_out(:,1)
-
-       end do !p
-    end do !s
-
-    !compute the smoothed variance from the simulations' square error sum
-    map_buffer = map_buffer/nsim
-    
-    !scale the smoothed variance map to match the simulated variance
-    do j = 1,nmaps_in
-       a_scale = 0.d0
-       k = 0
-       do i = 0,npix-1
-          if (map_out(i,j) > 0.d0) then  !make sure we don't divide by zero (or negative numbers)
-             a_scale = a_scale + map_buffer(i,j)/map_out(i,j)
-             k = k + 1
-          end if
-       end do
-       a_scale = a_scale / k
-       map_out(:,j) = map_out(:,j) * a_scale !get scaled variance
-       if (verbose > 0) write(*,fmt='(a,i1,a,f9.7)') '  map',j,'  variance scaling = ',a_scale
-       if (verbose > 0) write(*,fmt='(a,f9.7)') '    RMS "scaling" = ',dsqrt(a_scale)
-    end do
-
-    map_out = dsqrt(map_out) ! get back to the RMS map (taking sqrt of the variance map)
 
     ! go back to nested ordering if input was nested
     if (ordering == 2) then
        do i = 1, nmaps_in
           call convert_ring2nest(nside, map_out(:,i))
        end do
-    end if
-
-    if (trim(simfile_name) /= 'none') then
-       map_buffer = dsqrt(map_buffer) !create the RMS of the simulations
-       if (ordering == 2) then
-          do i = 1, nmaps_in
-             call convert_ring2nest(nside, map_buffer(:,i))
-          end do
-       end if
-       call write_result_map(simfile_name, nside, ordering, header, map_buffer)
     end if
 
     deallocate(listpix)
@@ -2819,338 +2400,10 @@ contains
     deallocate(beam_in)
     deallocate(beam_out)
     deallocate(map_in)
-    deallocate(wn_in)
-    deallocate(wn_out)
     deallocate(alms)
     deallocate(map_buffer)
 
   end subroutine smooth_rms_true
-
-  subroutine smooth_rms_true_degrade(infile, r_fill, lmin, lmax, nside, ordering, nmaps_in, map_out, header, &
-       & seed, nsim, verbose, simfile_name, beamfile_in, beamfile_out, fwhm_in, fwhm_out)
-    implicit none
-
-    character(len=256),                         intent(in)           :: infile, simfile_name
-    real(dp),                                   intent(inout)        :: r_fill
-    integer(i4b),                               intent(in)           :: nside, lmin, lmax, seed, nsim, verbose
-    real(dp),                                   intent(in), optional :: fwhm_in, fwhm_out
-    character(len=256),                         intent(in), optional :: beamfile_in, beamfile_out
-    integer(i4b),                               intent(out)          :: nmaps_in, ordering
-    real(dp),          pointer, dimension(:,:)                       :: map_out
-    character(len=80),          dimension(180)                       :: header
-
-    integer(i4b)       :: nside_in, npix, npix_in, nmaps, lmax2
-    integer(i4b)       :: i, j, k, l, m, p, r, s, nlist, sum_pix
-    real(dp)           :: nullval, tot, missval, a_scale
-    real(dp)           :: sigma_sq, nullval_dp, vec(3), theta, phi, rf
-    logical(lgt)       :: anynull
-    character(len=128) :: winfile_in, winfile_out
-    character(len=4)   :: ntext
-    type(planck_rng)   :: rng_handle
-
-    complex(dpc), allocatable, dimension(:,:,:) :: alms
-    real(dp),     allocatable, dimension(:,:)   :: map_in, wn_in, wn_out, map_buffer
-    real(dp),     pointer,     dimension(:,:)   :: pixwin_in, pixwin_out
-    real(dp),     pointer,     dimension(:,:)   :: weights
-    real(dp),     allocatable, dimension(:,:)   :: beam_in, beam_out
-    real(dp),                  dimension(2)     :: zbounds = 0.d0
-    integer(i4b), allocatable, dimension(:)     :: listpix
-
-    missval = -1.6375d30
-    
-    ! Read input map
-    i = getsize_fits(infile, nside=nside_in, ordering=ordering, nmaps=nmaps_in)
-    if (nmaps_in /= 1 .and. nmaps_in /= 3) then
-       if (nmaps_in < 3) then
-          nmaps_in = 1
-       else
-          nmaps_in = 3
-       end if
-    end if
-
-    nmaps   = 1  ! we are smoothong all RMS maps like temperature maps (spin-zero-maps)
-    npix    = nside2npix(nside)
-    npix_in = nside2npix(nside_in)
-
-    if (nside_in < nside) then
-       write(*,*) 'Nside of output is larger than that of input. Exiting.'
-       stop
-    end if
-
-    if (present(fwhm_in) .and. present(fwhm_out)) then
-       if (fwhm_out < fwhm_in) then
-          write(*,*) 'Beam of output is smaller than that of input. Exiting.'
-          stop
-       else if (fwhm_out == fwhm_in) then
-          write(*,*) "Beams of input and output are equal. Use 'ud_grade_rms' instead. Exiting."
-          stop
-       end if
-    end if
-
-    allocate(map_in(0:npix_in-1,nmaps_in))
-    allocate(map_buffer(0:npix-1,nmaps_in))
-    allocate(wn_in(0:npix-1,nmaps))
-    allocate(wn_out(0:npix-1,nmaps))
-    allocate(map_out(0:npix-1,nmaps_in))
-    allocate(listpix(0:npix-1))
-    allocate(alms(nmaps, 0:lmax, 0:lmax))
-    call rand_init(rng_handle, seed)
-
-    call read_bintab(infile, map_in, npix_in, nmaps_in, nullval, anynull, header=header)
-
-
-    !de_grade input RMS map
-    if (nside_in == nside) then
-       map_buffer = map_in
-    else
-       where (map_in < -1.6d30) 
-          map_in = -1.6375d30
-       elsewhere
-          map_in = map_in*map_in !get variance
-       end where
-
-       if (ordering == 1) then
-          call udgrade_ring(map_in, nside_in, map_buffer, nside)
-       else
-          call udgrade_nest(map_in, nside_in, map_buffer, nside)
-       end if
-
-       where (abs((map_out-missval)/missval) > 1.d-5)
-          map_buffer = sqrt(map_buffer)*(nside*1.d0/nside_in) !get RMS from average variance and scale with nside ratio
-       end where
-    end if
-
-
-    ! get ring ordering
-    if (ordering == 2) then
-       do i = 1, nmaps_in
-          call convert_nest2ring(nside, map_buffer(0:npix-1,i))
-       end do
-    end if
-
-    deallocate(map_in)
-    allocate(map_in(0:npix-1,nmaps_in))
-    map_in=map_buffer
-
-    ! Read pixel windows
-    call read_pixwin(nside, nmaps, pixwin_in)
-    call read_pixwin(nside, nmaps, pixwin_out)
-    call read_ringweights(nside, nmaps, weights)
-
-    ! Create or read beams
-    allocate(beam_in(0:lmax, nmaps))
-    allocate(beam_out(0:lmax, nmaps))
-
-    if (present(fwhm_in)) then
-       call generate_beam(abs(fwhm_in), lmax, beam_in)
-       if (fwhm_in < 0.) beam_in = 1.d0 / beam_in
-    else
-       call generate_beam(0.d0, lmax, beam_in, beamfile_in)
-       !if (nmaps == 3) then
-       !   beam_in(:,2) = beam_in(:,1)
-       !   beam_in(:,3) = beam_in(:,1)
-       !   write(*,*) 'Warning: Setting polarized beams equal to temperature beam'
-       !end if
-    end if
-
-    if (present(fwhm_out)) then
-       call generate_beam(abs(fwhm_out), lmax, beam_out)
-    else
-       call generate_beam(0.d0, lmax, beam_out, beamfile_out)
-       !if (nmaps == 3) then
-       !   beam_out(:,2) = beam_out(:,1)
-       !   beam_out(:,3) = beam_out(:,1)
-       !   write(*,*) 'Warning: Setting polarized beams equal to temperature beam'
-       !end if
-    end if
-
-    !removing missing pixels and invalid values
-    ! fill in missing pixels before smoothing
-    map_buffer = map_in
-    do j = 1, nmaps
-       do i = 0, npix-1
-          if (abs(map_in(i,j)) > 1e30) then
-             if (r_fill >= 0.d0) then
-                call pix2vec_ring(nside, i, vec)
-                do r = 1, r_fill
-                   rf = (r+0.2d0) * sqrt(4.d0*pi/npix)
-                   call query_disc(nside, vec, rf, listpix, nlist)
-                   tot = 0.d0
-                   m   = 0.d0
-                   do k = 0, nlist-1
-                      if (abs(map_buffer(listpix(k),j)) < 1.d30) then
-                         tot = tot + map_buffer(listpix(k),j)
-                         m   = m   + 1
-                      end if
-                   end do
-                   if (m > 0) then
-                      map_in(i,j) = tot / m
-                      exit
-                   end if
-                end do
-
-                if (r > r_fill) then
-                   call pix2ang_ring(nside, i, theta, phi)
-                   write(*,*) 'Error: Filter did not return valid pixel; increase r_fill'
-                   write(*,*) '     p         = ', i
-                   write(*,*) '     theta     = ', 90.d0-theta*180/pi
-                   write(*,*) '     phi       = ', phi*180/pi
-                   write(*,*) '     radius    = ', r_fill
-                   write(*,*) '     neighbors = ', listpix(0:nlist-1)
-                   write(*,*) '     vals      = ', map_buffer(listpix(0:nlist-1),j)
-                   stop
-                end if
-             else
-                map_in(i,j) = 0.d0
-             end if
-          end if
-       end do
-    end do
-
-    deallocate(map_buffer)
-
-    write(*,*) ""
-    write(*,*) "Smoothing input RMS map (in Variance domain)"
-    write(*,*) ""
-
-    !smooth input RMS map to map_out
-    !Do one map at a time; has to be smoothed as spin-zero-maps (i.e. Temp maps)
-    !The smoothing has to be done on the variance map with a beam that is FWHM/sqrt(2),
-    !where FWHM is the effective beam given by
-    ! FWHM = sqrt(1 - (FWHM_in/FWHM_out)**2) * FWHM_out
-    ! The effective beam has the same beam weights (per l) as beam(FWHM_out)/beam(FWHM_in)
-    ! so we do not need to calculate FWHM_effective, and it is not possible if we have beam files
-    ! Further we use the fact that (in Stokes I, i.e. temperature)
-    ! beam(fwhm') = beam(fwhm)**[(fwhm' /fwhm)**2] for all l > 0
-    ! so that beam(fwhm/sqrt(2)) = beam(fwhm)**1/2 = sqrt(beam(fwhm))
-
-    allocate(map_buffer(0:npix-1,nmaps_in))
-
-    map_buffer = map_in*map_in !Get the variance map to smooth
-
-    do p = 1, nmaps_in
-
-       alms = cmplx(0.,0.)
-       call map2alm(nside, lmax, lmax, map_buffer(:,p), alms, zbounds, weights)
-       
-       ! Deconvolve old beam and pixel window, and convolve new beam and pixel window
-       do i = 1, 1
-          alms(i,0:lmin-1,:) = cmplx(0.,0.)
-          do l = lmin, lmax
-             if (abs(pixwin_in(l,i)*beam_in(l,i)) < 0.00000001d0) then
-                if (verbose > 1) then
-                   if (l > 1 .or. i == 1) write(*,*) 'Multipole l = ', l, ' set to zero'
-                end if
-                alms(i,l,0:l) = cmplx(0.,0.)
-             else
-                !smooth with 1/sqrt(2) of effective beam
-                alms(i,l,0:l) = alms(i,l,0:l) * &
-                     & (pixwin_out(l,i)/pixwin_in(l,i)) * dsqrt(beam_out(l,i)/beam_in(l,i)) 
-             end if
-          end do
-       end do
-
-       ! Compute the inverse spherical harmonics to get the smoothed variance map
-       call alm2map(nside, lmax, lmax, alms, map_out(:,p))
-    end do
-
-    map_buffer = 0.d0
-
-    !simulate white noise nsim times and smooth maps like spin-0 maps, using normal smoothing (effective beam)
-    write(*,*) "Smoothing simulated data"
-    do s = 1, nsim
-       if (verbose > 1) then
-          write(*,*) "sim", s, "of", nsim
-       else if (verbose > 0 .and. mod(s,10) == 0) then
-          write(*,*) "sim", s, "of", nsim
-       end if
-
-       !Do one map at the time, all has to be smoothed as spin-zero-maps (i.e. Temp maps)
-       do p = 1, nmaps_in
-
-          !create white noise map from rms map
-          do i = 0,npix-1
-             wn_in(i,1) = map_in(i,p) * rand_gauss(rng_handle)
-          end do
-
-          
-          alms = cmplx(0.,0.)
-          call map2alm(nside, lmax, lmax, wn_in(:,1), alms, zbounds, weights)
-
-          ! Deconvolve old beam and pixel window, and convolve new beam and pixel window
-          do i = 1, 1
-             alms(i,0:lmin-1,:) = cmplx(0.,0.)
-             do l = lmin, lmax
-                if (abs(pixwin_in(l,i)*beam_in(l,i)) < 0.00000001d0) then
-                   alms(i,l,0:l) = cmplx(0.,0.)
-                else
-                   alms(i,l,0:l) = alms(i,l,0:l) * &
-                        & (pixwin_out(l,i)*beam_out(l,i)) / (pixwin_in(l,i)*beam_in(l,i))
-                end if
-             end do
-          end do
-
-          ! Compute the inverse spherical harmonics
-          call alm2map(nside, lmax, lmax, alms, wn_out(:,1))
-
-          !compute square error (assuming zero mean) for smoothed map and add to map_out
-          map_buffer(:,p) = map_buffer(:,p) + wn_out(:,1)*wn_out(:,1)
-
-       end do !p
-    end do !s
-
-    !compute the smoothed variance from the simulations' square error sum
-    map_buffer = map_buffer/nsim
-    
-    !scale the smoothed variance map to match the simulated variance
-    do j = 1,nmaps_in
-       a_scale = 0.d0
-       k = 0
-       do i = 0,npix-1
-          if (map_out(i,j) > 0.d0) then  !make sure we don't divide by zero (or negative numbers)
-             a_scale = a_scale + map_buffer(i,j)/map_out(i,j)
-             k = k + 1
-          end if
-       end do
-       a_scale = a_scale / k
-       map_out(:,j) = map_out(:,j) * a_scale !get scaled variance
-       if (verbose > 0) write(*,fmt='(a,i1,a,f9.7)') '  map',j,'  variance scaling = ',a_scale*(nside*1.d0/nside_in)**2
-       if (verbose > 0) write(*,fmt='(a,f9.7)') '    scaling without nside diff. = ',a_scale
-       if (verbose > 0) write(*,fmt='(a,f9.7)') '    RMS "scaling" = ',dsqrt(a_scale)*(nside*1.d0/nside_in)
-    end do
-
-    map_out = dsqrt(map_out) ! get back to the RMS map (taking sqrt of the variance map)
-
-    ! go back to nested ordering if input was nested
-    if (ordering == 2) then
-       do i = 1, nmaps_in
-          call convert_ring2nest(nside, map_out(:,i))
-       end do
-    end if
-
-    if (trim(simfile_name) /= 'none') then
-       map_buffer = dsqrt(map_buffer) !create the RMS of the simulations
-       if (ordering == 2) then
-          do i = 1, nmaps_in
-             call convert_ring2nest(nside, map_buffer(:,i))
-          end do
-       end if
-       call write_result_map(simfile_name, nside, ordering, header, map_buffer)
-    end if
-
-    deallocate(listpix)
-    deallocate(weights)
-    deallocate(pixwin_in)
-    deallocate(pixwin_out)
-    deallocate(beam_in)
-    deallocate(beam_out)
-    deallocate(map_in)
-    deallocate(wn_in)
-    deallocate(wn_out)
-    deallocate(alms)
-    deallocate(map_buffer)
-
-  end subroutine smooth_rms_true_degrade
 
   subroutine print_maximum(mapfile, component, fwhm)
     implicit none
@@ -3245,7 +2498,7 @@ contains
     real(dp), parameter :: missval=-1.6375d30
     logical(lgt) :: anynull
     type(planck_rng) :: rng_handle
-    character(len=128) :: par
+    character(len=512) :: par
     real(dp),    allocatable, dimension(:,:)   :: map, mask
     real(dp),    allocatable, dimension(:)     :: vals
 
@@ -3348,7 +2601,7 @@ contains
     real(dp)     :: theta, phi, t1, t2, integral, radius, mu, sigma, my_min, my_max, scale
     logical(lgt) :: anynull
     type(planck_rng) :: rng_handle
-    character(len=128) :: par
+    character(len=512) :: par
     real(dp),    allocatable, dimension(:,:)   :: map, mask
     real(dp),    allocatable, dimension(:)     :: vals
 
@@ -3977,7 +3230,7 @@ contains
   subroutine print_map_to_ascii(mapfile_in, maskfile, mapfile_out)
     implicit none
 
-    character(len=128), intent(in) :: mapfile_in, maskfile, mapfile_out
+    character(len=512), intent(in) :: mapfile_in, maskfile, mapfile_out
 
     integer(i4b) :: npix, nside, ordering, ordering2, nmaps, i, j, c
     real(dp)     :: nullval, mu, sigma
@@ -4037,7 +3290,7 @@ contains
   subroutine print_two_maps_to_ascii(mapfile1, mapfile2, maskfile, mapfile_out)
     implicit none
 
-    character(len=128), intent(in) :: mapfile1, mapfile2, maskfile, mapfile_out
+    character(len=512), intent(in) :: mapfile1, mapfile2, maskfile, mapfile_out
 
     integer(i4b) :: npix, nside, ordering, nmaps, i, j, ordering2
     real(dp)     :: nullval
@@ -4100,7 +3353,7 @@ contains
   subroutine print_isolatitude(mapfile_in, maskfile, outfile)
     implicit none
 
-    character(len=128), intent(in) :: mapfile_in, maskfile, outfile
+    character(len=512), intent(in) :: mapfile_in, maskfile, outfile
 
     integer(i4b) :: npix, nside, ordering, ordering2, nmaps, i, j, n, nlist, nring
     real(dp)     :: nullval, mu, sigma, dtheta
@@ -4172,7 +3425,7 @@ contains
   subroutine print_isolatitude_var(clfile, maskfile, outfile)
     implicit none
 
-    character(len=128), intent(in) :: clfile, maskfile, outfile
+    character(len=512), intent(in) :: clfile, maskfile, outfile
 
     integer(i4b) :: npix, nside, ordering, ordering2, nmaps, i, j, n, nlist, nring
     real(dp)     :: nullval, mu, sigma, dtheta
@@ -4249,7 +3502,7 @@ contains
 
     integer(i4b)       :: unit1, unit2, npix, pix, s
     character(len=1)   :: s_string
-    character(len=256) :: filename
+    character(len=512) :: filename
     real(dp), allocatable, dimension(:,:,:) :: map
     real(dp), allocatable, dimension(:,:)   :: nhits
     real(dp),              dimension(6)     :: ang
@@ -4587,7 +3840,7 @@ contains
     real(dp)           :: nullval
     real(dp)           :: sigma_sq, nullval_dp, fwhm_trans, threshold, cl
     logical(lgt)       :: anynull
-    character(len=128) :: beamfile1, beamfile2, infile1, infile2, outfile, partext, prefix, maskfile
+    character(len=512) :: beamfile1, beamfile2, infile1, infile2, outfile, partext, prefix, maskfile
     integer(i4b)       :: ltrans_start, ltrans_stop, ordering, nmaps
     character(len=4)   :: ntext
     type(planck_rng)   :: rng_handle
@@ -4801,7 +4054,7 @@ contains
     real(dp)           :: nullval, old_nu, new_nu,h_div_k
     real(dp)           :: nullval_dp, missval
     logical(lgt)       :: anynull
-    character(len=256) :: infile, infile2, outfile, partext
+    character(len=512) :: infile, infile2, outfile, partext
     integer(i4b)       :: ordering, nmaps, nmaps2, nmaps3, ordering2
     character(len=4)   :: ntext
     type(planck_rng)   :: rng_handle
@@ -4932,7 +4185,7 @@ contains
     real(dp)           :: nullval, mean1, mean2
     real(dp)           :: nullval_dp, radius, vec(3), threshold
     logical(lgt)       :: anynull, output_mask, mask_present
-    character(len=256) :: infile, outfile, partext, maskfile
+    character(len=512) :: infile, outfile, partext, maskfile
     integer(i4b)       :: ordering, nmaps, ordering2, nmaps2
     integer(i4b)       :: nside, npix, nside2
     character(len=4)   :: ntext
@@ -5123,7 +4376,7 @@ contains
     real(dp)           :: nullval, mean1
     real(dp)           :: nullval_dp, radius, vec(3), threshold
     logical(lgt)       :: anynull
-    character(len=128) :: infile, outfile, partext
+    character(len=512) :: infile, outfile, partext
     integer(i4b)       :: ordering, nmaps
     character(len=4)   :: ntext
     type(planck_rng)   :: rng_handle
@@ -5243,7 +4496,7 @@ contains
     real(dp)           :: nullval, mean1, mean2, theta, phi, missval
     real(dp)           :: nullval_dp, radius, vec(3), threshold
     logical(lgt)       :: anynull, anymiss, dpcfix
-    character(len=128) :: infile, outfile, partext
+    character(len=512) :: infile, outfile, partext
     integer(i4b)       :: ordering, nmaps, nref
     character(len=4)   :: ntext
     type(planck_rng)   :: rng_handle
@@ -5363,7 +4616,7 @@ contains
     real(dp)           :: nullval, mean1, mean2, theta, phi, missval
     real(dp)           :: nullval_dp, radius, vec(3), threshold, miss_sum
     logical(lgt)       :: anynull, anymiss, dpcfix
-    character(len=128) :: infile, outfile, partext
+    character(len=512) :: infile, outfile, partext
     integer(i4b)       :: ordering, nmaps, nref
     character(len=4)   :: ntext
     type(planck_rng)   :: rng_handle
@@ -5459,7 +4712,7 @@ contains
     real(dp)           :: nullval, missval
     real(dp)           :: nullval_dp
     logical(lgt)       :: anynull
-    character(len=128) :: infile, maskfile, outfile, partext
+    character(len=512) :: infile, maskfile, outfile, partext
     integer(i4b)       :: ordering, nmaps, ordering2, nmaps2
     character(len=4)   :: ntext
     type(planck_rng)   :: rng_handle
@@ -5533,7 +4786,7 @@ contains
     real(dp)           :: nullval, mean1, mean2
     real(dp)           :: nullval_dp, radius, vec(3), threshold
     logical(lgt)       :: anynull, expand_pos
-    character(len=128) :: infile, outfile, partext
+    character(len=512) :: infile, outfile, partext
     integer(i4b)       :: ordering, nmaps
     character(len=4)   :: ntext
     type(planck_rng)   :: rng_handle
@@ -5617,8 +4870,8 @@ contains
   subroutine ud_grade_mask
     implicit none
 
-    character(len=256)  :: filename_in, filename_out
-    character(len=256)  :: partext
+    character(len=512)  :: filename_in, filename_out
+    character(len=512)  :: partext
     integer(i4b)        :: nside_out
     logical(lgt)        :: double_precision
     real(dp)            :: threshold_value
@@ -5709,8 +4962,8 @@ contains
   subroutine ud_grade_rms
     implicit none
 
-    character(len=256)  :: filename_in, filename_out
-    character(len=256)  :: partext
+    character(len=512)  :: filename_in, filename_out
+    character(len=512)  :: partext
     integer(i4b)        :: nside_out
     logical(lgt)        :: double_precision
 
@@ -5771,8 +5024,8 @@ contains
   subroutine fill_zero_mask_udgrade
     implicit none
 
-    character(len=256)  :: filename_in, maskname, filename_out
-    character(len=256)  :: partext
+    character(len=512)  :: filename_in, maskname, filename_out
+    character(len=512)  :: partext
     integer(i4b)        :: nside_upper, nside_temp
     logical(lgt)        :: double_precision, mainzeropix, nsidenotzero
 
@@ -5956,8 +5209,8 @@ contains
   subroutine map_read_header
     implicit none
 
-    character(len=256)  :: filename_in
-    character(len=256)  :: partext
+    character(len=512)  :: filename_in
+    character(len=512)  :: partext
     logical(lgt)        :: double_precision
 
     real(dp)     :: nullval
@@ -6038,8 +5291,8 @@ contains
     real(dp)           :: nullval, mean1, mean2
     real(dp)           :: nullval_dp, radius, vec(3), gal_cor(2)
     logical(lgt)       :: anynull
-    character(len=128) :: infile, sourcefile, outfile, partext
-    character(len=256) :: line
+    character(len=512) :: infile, sourcefile, outfile, partext
+    character(len=512) :: line
     integer(i4b)       :: ordering, nmaps
     character(len=4)   :: ntext
     type(planck_rng)   :: rng_handle
@@ -6147,8 +5400,8 @@ contains
   subroutine copy_T_to_QU
         implicit none
 
-    character(len=256)  :: filename_in, filename_out
-    character(len=256)  :: partext
+    character(len=512)  :: filename_in, filename_out
+    character(len=512)  :: partext
     logical(lgt)        :: double_precision
     real(dp)            :: threshold_value
 
@@ -6204,8 +5457,8 @@ contains
   subroutine copy_pol_to_T
         implicit none
 
-    character(len=256)  :: filename_in, filename_out
-    character(len=256)  :: partext
+    character(len=512)  :: filename_in, filename_out
+    character(len=512)  :: partext
     logical(lgt)        :: double_precision
     real(dp)            :: threshold_value
 
@@ -6270,8 +5523,8 @@ contains
     integer(i4b)       :: nside_mask, ordering_mask, nmaps_mask,npix_mask
     real(dp)           :: norm, nullval
     character(len=3)   :: suffix
-    character(len=128) :: bandpass_in,string,firas_file,firas_maps,weight_file,output_map !,units
-    character(len=128) :: firmap1, firmap2,firas_path,firas_mask !,firas_conv
+    character(len=512) :: bandpass_in,string,firas_file,firas_maps,weight_file,output_map !,units
+    character(len=512) :: firmap1, firmap2,firas_path,firas_mask !,firas_conv
     logical(lgt)       :: exist
     logical(lgt)       :: double_precision
     logical(lgt)       :: anynull
@@ -6281,7 +5534,7 @@ contains
     real(dp), allocatable, dimension(:)   :: firas_weights,test1,test2
     real(dp), allocatable, dimension(:,:) :: map_1,map_2,new_map,mask
     character(len=80), dimension(180)     :: header
-    character(len=128), allocatable       :: str(:) 
+    character(len=512), allocatable       :: str(:) 
 
     firas_file='/mn/stornext/d14/Planck1/daniher/data/firas/firas_frequencies.dat'
     firas_maps='/mn/stornext/d14/Planck1/daniher/data/firas/firas_maps.dat'
@@ -6534,7 +5787,7 @@ contains
     real(dp)     :: nullval, mu_half, mu_exp, sigma, dtheta, var_half, var_exp
     real(dp)     :: fmissval = 0.
     logical(lgt) :: anynull, double_precision
-    character(Len=256) :: partext, outfile
+    character(len=512) :: partext, outfile
     real(dp), allocatable, dimension(:,:) :: half1, half2, rms1, rms2, map, mask, outmap, inmap
     real(dp), allocatable, dimension(:)   :: Ascale
     character(len=80), dimension(180)     :: header
