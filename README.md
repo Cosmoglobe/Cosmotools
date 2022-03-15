@@ -14,7 +14,7 @@ Collection of tools for editing and visualizing HEALPix maps, and other useful t
 
 More tools will be added in the future.
 
-######################################################
+---------------------------------------------------
 
 For those of you on the owls in Oslo, map_editor should compile by simply typing 'make' in the map_editor 
 directory. If it does not, try running `export LD_LIBRARY_PATH=/mn/stornext/u3/hke/owl/local/lib:$LD_LIBRARY_PATH`
