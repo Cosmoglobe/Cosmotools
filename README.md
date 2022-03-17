@@ -1,16 +1,16 @@
 # Cosmotools
 Collection of tools for editing and visualizing HEALPix maps, and other useful things:
 
-- map_editor:
+* map_editor:
   A Fortran compiled set of tools for manipulating HEALPix maps, with functionalities including, 
   but not limited to, smoothing with a beam, ud_grading, returning map statistics (mean, min, max, rms),
   scaline, converting QU maps to P, threshold masking, etc.
 
-- python tools:
+* python tools:
   List is small for now, but there currently exist three importable scripts which allow for:
-       - Converting units for frequencies or over bandpasses
-       - creating noise realizations from rms maps
-       - correlating two maps
+       * Converting units for frequencies or over bandpasses
+       * creating noise realizations from rms maps
+       * correlating two maps
 
 More tools will be added in the future.
 
