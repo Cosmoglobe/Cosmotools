@@ -18,6 +18,7 @@ More tools will be added in the future.
 
 In order to make sure everything works well on the owls, we need to point to the compiled libraries.
 In your bashrc, add the following line to ensure that you are always pointing to the right directories:
+
 `export LD_LIBRARY_PATH=/mn/stornext/u3/hke/owl/local/lib:$LD_LIBRARY_PATH`
 
 A list of map_editor dependencies is on the to-do list.
