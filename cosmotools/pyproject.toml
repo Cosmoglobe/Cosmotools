@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "cosmotools"
+version = "0.1.0"
+description = "A library of simple python functions for CMB analysis work flow"
+authors = ["hermda02 <d.c.herman02@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+numpy = "^1.22.3"
+astropy = "^5.0.4"
+healpy = "^1.15.2"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
