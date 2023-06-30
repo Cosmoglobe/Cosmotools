@@ -20,6 +20,42 @@ module map_editor_complex_ops_mod
 
 contains
 
+  subroutine rotate_G_to_E(mapname_in, mapname_out)
+    implicit none
+    character(len=*) :: mapname_in, mapname_out
+    integer(i4b)     :: i, nside, ordering, nmaps, npix, j
+    real(dp)         :: nullval, theta, phi
+    logical(lgt)     :: anynull
+    real(dp), allocatable, dimension(:,:) :: buffer_map, map_in, map_out
+    character(len=80), dimension(180)         :: header
+
+    i    = getsize_fits(mapname_in, nside=nside, ordering=ordering, nmaps=nmaps)
+    npix = nside2npix(nside)
+
+    allocate(buffer_map(0:npix-1,nmaps),map_in(0:npix-1,nmaps),map_out(0:npix-1,nmaps))
+
+    call read_bintab(mapname_in, map_in, npix, nmaps, nullval, anynull, header=header) 
+
+    if (ordering == 1) then
+       do i = 0, npix-1 
+          call pix2ang_ring(nside, i, theta, phi)
+          theta = theta + something
+          phi   = phi + something_else
+          call ang2pix_ring(nside, theta, phi, j)
+          map_out(j,1) = map_in(i,1)
+       end do
+    else
+       do i = 0, npix-1 
+          call pix2ang_nest(nside, i, theta, phi)
+          theta = theta + something
+          phi   = phi + something_else
+          call ang2pix_nest(nside, theta, phi, j)
+          map_out(j,1) = map_in(i,1)
+       end do
+    end if
+
+  end subroutine rotate_G_to_E
+
   subroutine fix_monopole(mapname_in1, mapname_in2, maskfile, mapname_out)
     implicit none
     character(len=*) :: mapname_in1, mapname_in2, maskfile, mapname_out
@@ -2230,6 +2266,9 @@ contains
     nmaps   = 1  ! we are smoothong all RMS maps like temperature maps (spin-zero-maps)
     npix    = nside2npix(nside)
     npix_in = nside2npix(nside_in)
+
+    write(*,*) 'Warning -- routine relies on most of the change coming from the difference in NSIDE'
+    write(*,*) 'as opposed to the beam effect. Use at your own discretion.'
 
     if (present(fwhm_in) .and. present(fwhm_out)) then
        if (fwhm_out < fwhm_in) then
