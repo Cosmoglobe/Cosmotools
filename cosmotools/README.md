@@ -1,0 +1,1 @@
+Cosmotools is a collection of simple python functions which can be imported for work flow within an interactive session.
