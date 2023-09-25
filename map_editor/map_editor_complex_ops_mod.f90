@@ -2822,7 +2822,7 @@ contains
        ! Interpret RMS map as Nobs, not RMS
        do j = 1, nmaps
           do i = 0, npix-1
-             if ((abs((map(i,j) -( -1.6375e30))/-1.6375e30) > 1.d-5) .and. rmsmap(i,j) >= 0.) then
+             if ((abs((map(i,j) + (1.6375e30))/1.6375e30) > 1.d-5) .and. rmsmap(i,j) >= 0.) then
                 map(i,j) = map(i,j) + sigma_0 / sqrt(rmsmap(i,j)) * rand_gauss(rng_handle)
              else 
                 map(i,j) = -1.6375e30
