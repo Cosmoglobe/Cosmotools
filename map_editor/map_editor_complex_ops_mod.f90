@@ -1854,7 +1854,7 @@ contains
     real(dp),          pointer, dimension(:,:)                       :: map
     character(len=80),          dimension(180)                       :: header
 
-    integer(i4b)       :: nside_in, npix, npix_in
+    integer(i4b)       :: nside_in, npix, npix_in, r_fill_int
     integer(i4b)       :: i, j, k, l, m, r, nlist
     real(dp)           :: nullval, tot
     real(dp)           :: sigma_sq, nullval_dp, vec(3), theta, phi, rf
@@ -1880,6 +1880,8 @@ contains
        end if
     end if
 
+    r_fill_int = int(r_fill)
+    
     npix    = nside2npix(nside)
     npix_in = nside2npix(nside_in)
     allocate(map_in(0:npix_in-1,nmaps), map_buffer(0:npix_in-1,nmaps))
@@ -1932,7 +1934,7 @@ contains
           if (abs(map_in(i,j)) > 1e30) then
              if (r_fill >= 0.d0) then
                 call pix2vec_ring(nside_in, i, vec)
-                do r = 1, r_fill
+                do r = 1, r_fill_int
                    rf = (r+0.2d0) * sqrt(4.d0*pi/npix_in)
                    call query_disc(nside_in, vec, rf, listpix, nlist)
                    tot = 0.d0
@@ -2036,7 +2038,7 @@ contains
     real(dp),           pointer, dimension(:,:)                      :: map
     character(len=80),           dimension(180)                      :: header
 
-    integer(i4b)       :: nside_in, npix, npix_in
+    integer(i4b)       :: nside_in, npix, npix_in, r_fill_int
     integer(i4b)       :: i, j, k, l, m, r, nlist, map_count, nmaps2
     real(dp)           :: nullval, tot
     real(dp)           :: sigma_sq, nullval_dp, vec(3), theta, phi, rf
@@ -2063,6 +2065,8 @@ contains
     end if
 
     nmaps = 1
+
+    r_fill_int = int(r_fill)
 
     npix    = nside2npix(nside)
     npix_in = nside2npix(nside_in)
@@ -2132,7 +2136,7 @@ contains
              if (abs(map_in(i,j)) > 1e30) then
                 if (r_fill >= 0.d0) then
                    call pix2vec_ring(nside_in, i, vec)
-                   do r = 1, r_fill
+                   do r = 1, r_fill_int
                       rf = (r+0.2d0) * sqrt(4.d0*pi/npix_in)
                       call query_disc(nside_in, vec, rf, listpix, nlist)
                       tot = 0.d0
@@ -2234,7 +2238,7 @@ contains
     real(dp),          pointer, dimension(:,:)                       :: map_out
     character(len=80),          dimension(180)                       :: header
 
-    integer(i4b)       :: nside_in, npix, npix_in, nmaps, lmax2
+    integer(i4b)       :: nside_in, npix, npix_in, nmaps, lmax2, r_fill_int
     integer(i4b)       :: i, j, k, l, m, p, r, s, nlist, sum_pix
     real(dp)           :: nullval, tot, missval, a_scale
     real(dp)           :: sigma_sq, nullval_dp, vec(3), theta, phi, rf
@@ -2264,6 +2268,9 @@ contains
     end if
 
     nmaps   = 1  ! we are smoothong all RMS maps like temperature maps (spin-zero-maps)
+
+    r_fill_int = int(r_fill)
+
     npix    = nside2npix(nside)
     npix_in = nside2npix(nside_in)
 
@@ -2334,7 +2341,7 @@ contains
           if (abs(map_in(i,j)) > 1e30) then
              if (r_fill >= 0.d0) then
                 call pix2vec_ring(nside_in, i, vec)
-                do r = 1, r_fill
+                do r = 1, r_fill_int
                    rf = (r+0.2d0) * sqrt(4.d0*pi/npix_in)
                    call query_disc(nside_in, vec, rf, listpix, nlist)
                    tot = 0.d0
@@ -2815,7 +2822,7 @@ contains
        ! Interpret RMS map as Nobs, not RMS
        do j = 1, nmaps
           do i = 0, npix-1
-             if (abs((map(i,j) -( -1.6375e30))/-1.6375e30) > 1.d-5 .and. rmsmap(i,j) >= 0.) then
+             if ((abs((map(i,j) -( -1.6375e30))/-1.6375e30) > 1.d-5) .and. rmsmap(i,j) >= 0.) then
                 map(i,j) = map(i,j) + sigma_0 / sqrt(rmsmap(i,j)) * rand_gauss(rng_handle)
              else 
                 map(i,j) = -1.6375e30
