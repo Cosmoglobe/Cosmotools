@@ -1,10 +1,9 @@
+include config/config.gnu
 
-include config/config.ita_intel
+export F90FLAGS := -g -O3
 
-export F90FLAGS := -g -O2
-
-export F90COMP := $(F90FLAGS) -I/include $(HEALPIX_INCLUDE) $(LAPACK_INCLUDE) $(CFITSIO_INCLUDE) $(FFTW_INCLUDE) $(HDF_INCLUDE)
-export LINK := $(HEALPIX_LINK) $(CFITSIO_LINK) $(LAPACK_LINK) $(FFTW_LINK) $(NOVAS_LINK) $(LDFLAGS) $(HDF_LINK) $(OPENMP)
+export F90COMP := $(F90FLAGS) $(HEALPIX_INCLUDE) $(LAPACK_INCLUDE) $(CFITSIO_INCLUDE) $(FFTW_INCLUDE) $(HDF_INCLUDE)
+export LINK := $(HEALPIX_LINK) $(CFITSIO_LINK) $(LAPACK_LINK) $(FFTW_LINK) $(HDF_LINK) $(OPENMP)
 
 COBJS  := math_tools.o sort_utils.o locate_mod.o spline_1D_mod.o spline_2D_mod.o \
 	map_editor_utils.o map_editor_simple_ops_mod.o map_editor_complex_ops_mod.o 
