@@ -209,7 +209,8 @@ contains
     real(dp), dimension(1:),    intent(out)           :: eigenvals
     real(dp), dimension(1:,1:), intent(out)           :: eigenvectors
 
-    integer(i8b)     :: i, n, liwork, lwork, lda, ldb, info
+    integer(i8b)     :: i, ldb
+    integer(i4b)     :: n, lda, lwork, liwork, info
     character(len=1) :: job, uplo
     real(dp)         :: cutoff_int
     real(dp),     allocatable, dimension(:,:) :: A_int

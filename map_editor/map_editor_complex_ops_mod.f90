@@ -24,7 +24,7 @@ contains
     implicit none
     character(len=*) :: mapname_in, mapname_out
     integer(i4b)     :: i, nside, ordering, nmaps, npix, j
-    real(dp)         :: nullval, theta, phi
+    real(dp)         :: nullval, theta, phi, something, something_else
     logical(lgt)     :: anynull
     real(dp), allocatable, dimension(:,:) :: buffer_map, map_in, map_out
     character(len=80), dimension(180)         :: header
@@ -4467,7 +4467,7 @@ contains
                 call query_disc(nside, vec, radius, listpix1, n1)
                 m=-1
                 do k = 0,n1-1
-                   if ((map(listpix1(k),j)==threshold) > 1d-6) then
+                   if ((map(listpix1(k),j) - threshold) > 1d-6) then
                       m = m + 1
                       listmap1(m)=map(listpix1(k),j)
                    end if
@@ -6356,7 +6356,7 @@ contains
     write(*,*) 'Starting iterating over line ratios'
     chisq_diff = 1.d0
     counter=0
-    do while (converged==.false. .and. counter<=500)
+    do while (converged .eqv. .false. .and. counter<=500)
        counter = counter + 1
        do j=1,n_co
           do k = 1, n_sky-1
