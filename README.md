@@ -16,12 +16,11 @@ More tools will be added in the future.
 
 ---------------------------------------------------
 
-In order to make sure everything works well on the owls, we need to point to the compiled libraries.
-In your bashrc, add the following line to ensure that you are always pointing to the right libraries:
+Compiling map_editor:
 
-`export LD_LIBRARY_PATH=/mn/stornext/u3/hke/owl/local/lib:$LD_LIBRARY_PATH`
+If you already have compiled Commander, all you have to do is change the LOCAL variable in map_editor/Makefile to your own commander/build/install directory, e.g.:
+export LOCAL=/mn/stornext/u3/(username)/git/commander/build/install
 
-A list of map_editor dependencies is on the to-do list.
-
-- Daniel
+and make sure to have the right modules loaded by for instance having this in .bashrc:
+module load intel/oneapi mpi/latest compiler-rt/latest compiler/latest mkl/latest
 
