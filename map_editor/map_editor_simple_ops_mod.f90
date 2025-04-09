@@ -152,7 +152,25 @@ contains
           elsewhere
              map1 = 0.d0
           end where
-    end select
+       case ('lower2mask')
+          where (map1 < value .or. abs((map1-missval)/missval) < 1d-5)
+             map1 = 0.d0
+          elsewhere
+             map1 = 1.d0
+          end where
+       case ('higher2mask')
+          where (map1 > value .or. abs((map1-missval)/missval) < 1d-5)
+             map1 = 0.d0
+          elsewhere
+             map1 = 1.d0
+          end where
+       case ('equal2mask')
+          where (map1 == value .or. abs((map1-missval)/missval) < 1d-5)
+             map1 = 0.d0
+          elsewhere
+             map1 = 1.d0
+          end where
+       end select
 
   end subroutine operate_on_single_map
 

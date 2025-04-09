@@ -44,7 +44,7 @@ program map_editor
      write(*,*) '       scale, add_offset, log, ln, exp, abs, inv, sqrt, '
      write(*,*) '       asinh, hitcount2rms, max_scalar, min_scalar, missing2mask'
      write(*,*) '       QU2P, rms2mask, amp2mask, hitcount2mask, invert_mask,'
-     write(*,*) '       missing2val'
+     write(*,*) '       missing2val, higher2mask, lower2mask, equal2mask'
      write(*,*) ''
      write(*,*) '       ---- TWO MAP OPERATIONS  ----'
      write(*,*) '       add, subtract, multiply, divide, half_sum, half_diff, '
@@ -104,6 +104,8 @@ program map_editor
        & trim(operation) == 'max_scalar' .or. trim(operation) == 'min_scalar' .or. &
        & trim(operation) == 'hitcount2mask' .or. trim(operation) == 'QU2P' .or. &
        & trim(operation) == 'missing2mask' .or. trim(operation) == 'missing2val' .or. &
+       & trim(operation) == 'higher2mask' .or. trim(operation) == 'lower2mask' .or. &
+       & trim(operation) == 'equal2mask' .or. &
        & trim(operation) == 'invert_mask') then
      
      if (iargc() < 2) then
