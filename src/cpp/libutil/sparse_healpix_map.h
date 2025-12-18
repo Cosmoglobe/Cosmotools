@@ -5,7 +5,7 @@
 #include <map>
 #include <set>
 #include <healpix_base.h>
-#include <arr.h>
+#include <healpix_cxx/arr.h>
 #include <pset.h>
 #include <limits.h>
 #include <cmath>

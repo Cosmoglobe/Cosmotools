@@ -1,13 +1,30 @@
-targets := libutil.a
-objs    := sslice.o stoken.o spng.o scolorizer.o stimer.o serror.o seph.o hpixdata.o
+# libutil Makefile
 
-all: $(targets)
+# Compiler and flags
+CXX ?= g++
+CFLAGS ?= -O2 -Wall -fPIC
+HEALPIX_INCLUDE_CPP = -I/home/dwatts/Downloads/Healpix_3.83/include
 
-libutil.a: $(objs)
+
+# Targets
+TARGET = libutil.a
+SRCS   = sslice.cpp stoken.cpp spng.cpp scolorizer.cpp stimer.cpp serror.cpp seph.cpp hpixdata.cpp
+OBJS   = $(SRCS:.cpp=.o)
+
+# Default rule
+all: $(TARGET)
+
+# Build the static library
+$(TARGET): $(OBJS)
 	ar crs $@ $^
 
+# Compile source files to object files
 %.o: %.cpp
-	$(CXX) -c -I. $(CFLAGS) $(HEALPIX_INCLUDE_CPP) -I../ephcom $<
+	$(CXX) $(CFLAGS) -I. $(HEALPIX_INCLUDE_CPP) -I../ephcom -c $< -o $@
 
+# Clean build products
 clean:
-	rm -f $(targets) $(objs)
+	rm -f $(TARGET) $(OBJS)
+
+.PHONY: all clean
+

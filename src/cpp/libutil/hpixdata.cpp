@@ -1,7 +1,7 @@
 #include <hpixdata.h>
 #include <map>
 #include <serror.h>
-#include <fitshandle.h>
+#include <healpix_cxx/fitshandle.h>
 #include <cstdio>
 
 namespace skn {

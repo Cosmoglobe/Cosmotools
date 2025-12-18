@@ -3,7 +3,7 @@
 
 #include <string>
 #include <vector>
-#include <arr.h>
+#include <healpix_cxx/arr.h>
 #include <stdio.h>
 
 namespace skn {

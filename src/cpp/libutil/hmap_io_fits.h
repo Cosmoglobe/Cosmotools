@@ -4,9 +4,9 @@
 /* This header provides read_hmap_fits and write_hmap_fits */
 
 #include <hmap.h>
-#include <fitshandle.h>
+#include <healpix_cxx/fitshandle.h>
 #include <fits_types.h>
-#include <lsconstants.h>
+#include <healpix_cxx/lsconstants.h>
 
 namespace skn
 {
