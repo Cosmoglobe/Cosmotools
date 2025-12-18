@@ -12,6 +12,7 @@
 #include <hmap_io.h>
 #include <healpix_map.h>
 #include <cstring>
+#include <cmath>
 
 using namespace std;
 using namespace skn;
@@ -25,6 +26,8 @@ enum { TRF_LIN,  TRF_HIST, TRF_LOG };
 
 typedef HMap<double> Map;
 string set_file_extension(const string & s, const string & ext);
+
+
 
 Projection pro_mollw(const Map & map, int sub, int sig, int xsize, double lon0, double lat0)
 {
@@ -166,7 +169,7 @@ Image make_num(int margin, const SimpleFont & font, int dig, double v)
 	for(int x = 0; x < font.xpix; x++)
 	for(int y = 0; y < font.ypix; y++)
 	{
-		byte v = 255*(1-font.data[(buf[i]*font.ypix+y)*font.xpix + x]);
+		skn::byte v = 255*(1-font.data[(buf[i]*font.ypix+y)*font.xpix + x]);
 		res(i*font.xpix + x+margin, y+margin) = Pixel(v,v,v);
 	}
 	return res;
@@ -237,6 +240,33 @@ Pixel blend(const Pixel & bg, const Pixel & fg, double alpha)
 		alpha*fg(i)+(1-alpha)*bg(i))));
 	return res;
 }
+
+// Draw a thick border around the Mollweide map
+void draw_mollweide_border(Image & img, const Pixel & borderColor, double linewidth)
+{
+    int nx = img.size(0);
+    int ny = img.size(1);
+    double xc = (nx - 1) / 2.0;
+    double yc = (ny - 1) / 2.0;
+    double delta = 2.0 / nx;  // roughly one pixel in normalized coordinates
+
+    for (int i = 0; i < nx; ++i)
+    for (int j = 0; j < ny; ++j)
+    {
+        double u = 2 * (i - xc) / (xc / 1.02);
+        double v = -(j - yc) / (yc / 1.02);
+        double dist2 = (u*u)/4 + v*v;
+
+        // overwrite pixels that lie within the border band
+        if (dist2 >= 1.0 - linewidth*delta && dist2 <= 1.0)
+        {
+            img(i,j) = borderColor;
+        }
+    }
+}
+
+
+
 
 double grid_val(const pointing & pnt, double lat_interval, double lon_interval, double linewidth)
 {
@@ -337,7 +367,7 @@ void help()
 		" -glat NUM      Grid interval in latitud\n"
 		" -glon NUM      Grid interval in longitude\n"
 		" -nogrid        Grid off (default)\n"
-		" -color wmap|gray|COLORSPEC Color scheme to use (default wmap)\n"
+		" -color         planck|wmap|gray|COLORSPEC Color scheme to use (default planck)\n"
 		" -lw NUM        Grid line width in pixels\n"
 		" -latitude NUM  Center of map in latitude\n"
 		" -longitude NUM Center of map in longitude\n"
@@ -349,7 +379,7 @@ void help()
 		" -digits INT    Digits of numbers in color bar range\n"
 		" -auto NUM      Quantiles to use for automatic color range (default 0)\n"
 		" -ncol INT      Number of columns to use in grid layout (default 0: unlimited)\n"
-		" -bg RRGGBB     Background color of image\n");
+		" -bg RRGGBB     Background color of image in hex\n");
 }
 
 int main(int argc, char ** argv)
@@ -366,7 +396,7 @@ int main(int argc, char ** argv)
 		bool bar = false, verbose = false, grid = false;
 		vector<int> cols, submaps;
 		vector<char*> args;
-		Colorizer colorize = Colorizer::wmap;
+		Colorizer colorize = Colorizer::planck;
 		SimpleFont font = font_medium_bold;
 		Pixel bgcol(128,128,128);
 
@@ -394,6 +424,14 @@ int main(int argc, char ** argv)
 				string s = *++i;
 				if(s == "wmap") colorize = Colorizer::wmap;
 				else if(s == "gray" || s == "grey") colorize = Colorizer("0:000000,1:ffffff");
+				else if(s == "planck") colorize = Colorizer::planck;
+                                else if(s == "viridis") colorize = Colorizer::viridis;
+                                else if(s == "plasma")  colorize = Colorizer::plasma;
+                                else if(s == "magma")   colorize = Colorizer::magma;
+                                else if(s == "cividis") colorize = Colorizer::cividis;
+                                else if(s == "inferno") colorize = Colorizer::inferno;
+                                else if(s == "turbo")   colorize = Colorizer::turbo;
+                                else if(s == "afmhot")   colorize = Colorizer::afmhot;
 				else colorize = Colorizer(s);
 			}
 			else if(begins(*i,"-lw", 3)) gridline = atof(*++i);
@@ -452,7 +490,9 @@ int main(int argc, char ** argv)
 			if(ok_val(projs[i][j]))
 			{
 				// HACK
-				if(trans == TRF_LOG) projs[i][j] = log(abs(projs[i][j]));
+				if(trans == TRF_LOG) {
+					projs[i][j] = log(abs(projs[i][j]));
+				};
 				dvals.push_back(projs[i][j]);
 			}
 		// HACK
@@ -501,6 +541,7 @@ int main(int argc, char ** argv)
 		for(int i = 0; i < projs.size(); i++)
 		{
 			Image img(projs[i].extent());
+			/*
 			for(int j = 0; j < img.size(); j++)
 			{
 				double v = projs[i][j];
@@ -509,6 +550,15 @@ int main(int argc, char ** argv)
 				else if(is_hpbad(v)) img[j] = Pixel(128,128,128);
 				else                 img[j] = colorize(v);
 			}
+			*/
+                        for(int j = 0; j < img.size(); j++)
+                        {
+                            double v = projs[i][j];
+                            if(is_nan(v) || is_inf(v) || is_hpbad(v))
+                                img[j] = bgcol;           // Use the user-specified background color
+                            else
+                                img[j] = colorize(v);     // Use the colorizer for valid pixels
+                        }
 			images.push_back(img);
 		}
 		Image blank(images[0].extent(),bgcol);
@@ -519,17 +569,26 @@ int main(int argc, char ** argv)
 		{
 			t1 = wall_time(); if(verbose) fprintf(stderr, "Drawing grid ");
 			for(int i = 0; i < images.size(); i++)
-				if(pro == PRO_MOLL)
+				if(pro == PRO_MOLL) {
 					grid_moll(images[i], lon, lat, gridlon, gridlat, gridline);
+				}
 				else
 					grid_gno(images[i], lon, lat, res, gridlon, gridlat, gridline);
 			t2 = wall_time(); if(verbose) fprintf(stderr, "%.6f\n", t2-t1);
+		}
+
+		if (pro == PRO_MOLL) {
+			for (int i = 0; i < images.size(); i++ )
+			{
+			draw_mollweide_border(images[i], Pixel(0,0,0), 10);
+			}
 		}
 
 		// Make the color bar
 		t1 = wall_time(); if(verbose) fprintf(stderr, "Making color bar ");
 		Image colorbar = make_colorbar(trf, colorize, font, dig, ncol*xsize, ticklevel, drange, urange, ugiven);
 		t2 = wall_time(); if(verbose) fprintf(stderr, "%.6f\n", t2-t1);
+
 
 		// Create the final canvas
 		t1 = wall_time(); if(verbose) fprintf(stderr, "Composing image ");
