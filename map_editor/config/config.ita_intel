@@ -88,7 +88,8 @@ export DVI2PDF_COMP := dvi2pdf
 # =============== Main path ================
 
 #export LOCAL=/mn/stornext/u3/hke/owl/local
-export LOCAL=/mn/stornext/u3/ingunnkw/git/commander/build/install
+#export LOCAL=/mn/stornext/u3/ingunnkw/git/commander/build/install
+export LOCAL=/mn/stornext/u3/Commander/build_owl3637_oneapi_Release/install
 
 # =============== CFITSIO Linking ================
 
@@ -127,7 +128,8 @@ export CFITSIO_LINK := -L$(LOCAL)/lib -lcfitsio
 #export HEALPIX_LINK_CPP := -L$(LOCAL)/lib -lhealpix_cxx -lcxxsupport -lgomp -lfftpack
 
 #export HEALPIX := /mn/stornext/u3/hke/owl/local/src/dagsshealpix
-export HEALPIX := /mn/stornext/u3/ingunnkw/git/commander/build/install/healpix
+#export HEALPIX := /mn/stornext/u3/ingunnkw/git/commander/build/install/healpix
+export HEALPIX := /mn/stornext/u3/duncanwa/Commander/build_owl3637_oneapi_Release/install/healpix
 export HEALPIX_INCLUDE := -I$(HEALPIX)/include
 export HEALPIX_LINK := -L$(HEALPIX)/lib -lhealpix
 

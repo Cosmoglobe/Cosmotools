@@ -174,21 +174,28 @@ contains
 
   end subroutine operate_on_single_map
 
-  subroutine operate_on_two_maps(map1, map2, operation)
+  subroutine operate_on_two_maps(map1, map2, pixel, operation)
     implicit none
 
     character(len=*),                   intent(in)    :: operation
     real(dp),         dimension(0:,1:), intent(inout) :: map1
     real(dp),         dimension(0:,1:), intent(in)    :: map2
+    integer(i4b),     dimension(0:),    intent(in)    :: pixel
 
-    integer(i4b) :: i, j, npix, nmaps
+    integer(i4b) :: i, j, k, npix, nmaps, maxind
     real(dp)     :: missval = -1.6375d30
 
     npix  = size(map1(:,1))
     nmaps = min(size(map1,2), size(map2,2))
 
+
+    maxind = findloc(pixel, 0, kind=i4b, dim=1)
+    if (maxind .eq. 0) maxind = size(pixel) - 1
+
+
     do i = 1, nmaps
        do j = 0, npix-1
+          !j = pixel(k)
           if (abs((map1(j,i)-missval)/missval) > 1d-5 .and. abs((map2(j,i)-missval)/missval) > 1d-5) then
              select case (trim(operation))
              case ('add')

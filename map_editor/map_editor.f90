@@ -32,6 +32,7 @@ program map_editor
   real(dp)           :: fwhm_in, fwhm_out, md(4), fact, f(3)
 
   real(dp),     pointer, dimension(:,:) :: map, map2, resmap
+  integer(i4b), pointer, dimension(:)   :: pixel, pixel2
   logical(lgt), pointer, dimension(:)   :: mask
   character(len=80), dimension(180)  :: header
 
@@ -137,10 +138,10 @@ program map_editor
         value = 0.
      end if
 
-     call initialize_single_map(mapname_in1, nside, ordering, nmaps, header, map)
+     call initialize_single_map(mapname_in1, nside, ordering, nmaps, header, map, pixel)
 
      call operate_on_single_map(map, operation, value)
-     call write_result_map(mapname_out, nside, ordering, header, map, suffix=='_dp')
+     call write_result_map(mapname_out, nside, ordering, header, map, suffix=='_dp', pixel)
 
   else if (trim(operation) == 'ring2nest' .or. trim(operation) == 'nest2ring') then
 
@@ -154,7 +155,7 @@ program map_editor
      call getarg(2,mapname_in1)
      call getarg(3,mapname_out)
 
-     call initialize_single_map(mapname_in1, nside, ordering, nmaps, header, map)
+     call initialize_single_map(mapname_in1, nside, ordering, nmaps, header, map, pixel)
 
      if (trim(operation) == 'ring2nest') then
 
@@ -184,7 +185,7 @@ program map_editor
 
      end if
 
-     call write_result_map(mapname_out, nside, ordering, header, map, suffix=='_dp')
+     call write_result_map(mapname_out, nside, ordering, header, map, suffix=='_dp', pixel)
 
 
   else if (trim(operation) == 'scale_TQU') then
@@ -205,11 +206,11 @@ program map_editor
      call getarg(6,string_real)
      read(string_real,*) f(3)
 
-     call initialize_single_map(mapname_in1, nside, ordering, nmaps, header, map)
+     call initialize_single_map(mapname_in1, nside, ordering, nmaps, header, map, pixel)
      do i = 1, 3
         map(:,i) = map(:,i) * f(i)
      end do
-     call write_result_map(mapname_out, nside, ordering, header, map, suffix=='_dp')
+     call write_result_map(mapname_out, nside, ordering, header, map, suffix=='_dp', pixel)
 
   else if (trim(operation) == 'apply_mask') then
 
@@ -227,7 +228,7 @@ program map_editor
         call getarg(5,string_real)
         read(string_real,*) fact
      end if
-     call initialize_single_map(mapname_in1, nside, ordering, nmaps, header, map)
+     call initialize_single_map(mapname_in1, nside, ordering, nmaps, header, map, pixel)
      if (iargc() == 4) then
         call apply_mask1(maskfile, nside, ordering, map)
      else if (iargc() == 5) then
@@ -237,7 +238,7 @@ program map_editor
         write(*,*) "Usage: map_editor apply_mask [input map] [mask] [output map]"
         write(*,*) ''
      end if
-     call write_result_map(mapname_out, nside, ordering, header, map, suffix=='_dp')
+     call write_result_map(mapname_out, nside, ordering, header, map, suffix=='_dp', pixel)
 
   else if (trim(operation) == 'fix_monopole') then
 
@@ -269,8 +270,8 @@ program map_editor
      call getarg(3,maskfile)
 
      call output_mean_and_stddev(nside, ordering, nmaps, header, map, map2)
-     call write_result_map(trim(outprefix)//'_mean.fits', nside, ordering, header, map, suffix=='_dp')
-     call write_result_map(trim(outprefix)//'_stddev.fits', nside, ordering, header, map2, suffix=='_dp')
+     call write_result_map(trim(outprefix)//'_mean.fits', nside, ordering, header, map, suffix=='_dp', pixel)
+     call write_result_map(trim(outprefix)//'_stddev.fits', nside, ordering, header, map2, suffix=='_dp', pixel)
 
   else if (trim(operation) == 'add' .or. trim(operation) == 'subtract' .or. &
        & trim(operation) == 'multiply' .or. trim(operation) == 'divide' .or. &
@@ -297,11 +298,12 @@ program map_editor
      call getarg(3,mapname_in2)
      call getarg(4,mapname_out)
 
-     call initialize_single_map(mapname_in1, nside, ordering, nmaps, header, map)
-     call initialize_second_map(mapname_in2, nside, ordering, nmaps, map2)
+     call initialize_single_map(mapname_in1, nside, ordering, nmaps, header, map, pixel)
+     call initialize_second_map(mapname_in2, nside, ordering, nmaps, map2, pixel2)
 
-     call operate_on_two_maps(map, map2, operation)
-     call write_result_map(mapname_out, nside, ordering, header, map, suffix=='_dp')
+     call operate_on_two_maps(map, map2, pixel, operation)
+
+     call write_result_map(mapname_out, nside, ordering, header, map, suffix=='_dp', pixel)
 
   else if (trim(operation) == 'weighted_sum') then
 
@@ -315,7 +317,7 @@ program map_editor
      call getarg(2,infofile)
      call getarg(3,mapname_out)
      call compute_weighted_sum(infofile, nside, ordering, nmaps, resmap, header)
-     call write_result_map(mapname_out, nside, ordering, header, resmap, suffix=='_dp')
+     call write_result_map(mapname_out, nside, ordering, header, resmap, suffix=='_dp', pixel)
 
   else if (trim(operation) == 'ptsrc') then
 
@@ -411,7 +413,7 @@ program map_editor
 
      call getarg(9,mapname_out)
 
-     call write_result_map(mapname_out, nside, ordering, header, map, suffix=='_dp')
+     call write_result_map(mapname_out, nside, ordering, header, map, suffix=='_dp', pixel)
 
   else if (trim(operation) == 'smooth_zerospin') then
 
@@ -503,7 +505,7 @@ program map_editor
 
      call getarg(9,mapname_out)
 
-     call write_result_map(mapname_out, nside, ordering, header, map, suffix=='_dp')
+     call write_result_map(mapname_out, nside, ordering, header, map, suffix=='_dp', pixel)
 
 
   else if (trim(operation) == 'smooth_rms') then
@@ -584,7 +586,7 @@ program map_editor
 
      call getarg(9,mapname_out)
 
-     call write_result_map(mapname_out, nside, ordering, header, map, suffix=='_dp')
+     call write_result_map(mapname_out, nside, ordering, header, map, suffix=='_dp', pixel)
 
      
   else if (trim(operation) == 'shift_columns') then
@@ -596,7 +598,7 @@ program map_editor
 
      call shift_columns(mapname_in1, ncol, nside, ordering, header, map)
 
-     call write_result_map(mapname_out, nside, ordering, header, map, suffix=='_dp')
+     call write_result_map(mapname_out, nside, ordering, header, map, suffix=='_dp', pixel)
 
   else if (trim(operation) == 'add_gaussian_noise') then
 
@@ -637,7 +639,7 @@ program map_editor
 
      end if
 
-     call write_result_map(mapname_out, nside, ordering, header, map, suffix=='_dp')
+     call write_result_map(mapname_out, nside, ordering, header, map, suffix=='_dp', pixel)
 
   else if (trim(operation) == 'subtract_mono_dipole') then
 
@@ -665,7 +667,7 @@ program map_editor
         call subtract_mono_dipole(mapname_in1, maskfile, nside, ordering, map, header)
      end if
 
-     call write_result_map(mapname_out, nside, ordering, header, map, suffix=='_dp')
+     call write_result_map(mapname_out, nside, ordering, header, map, suffix=='_dp', pixel)
 
   else if (trim(operation) == 'subtract_mono_dipole_highl') then
 
@@ -678,7 +680,7 @@ program map_editor
      call getarg(6,mapname_out)
      call subtract_mono_dipole_highl(mapname_in1, maskfile, lmax, lcut, nside, ordering, map, header)
 
-     call write_result_map(mapname_out, nside, ordering, header, map, suffix=='_dp')
+     call write_result_map(mapname_out, nside, ordering, header, map, suffix=='_dp', pixel)
 
   else if (trim(operation) == 'partrans') then
 
@@ -686,10 +688,10 @@ program map_editor
      call getarg(3,string_int)
      read(string_int,*) nside_out
      call getarg(4,mapname_out)
-     call initialize_single_map(mapname_in1, nside, ordering, nmaps, header, map)
+     call initialize_single_map(mapname_in1, nside, ordering, nmaps, header, map, pixel)
      write(*,*) nside, ordering, nside_out
      call qu_transport_map(nside_out, map)
-     call write_result_map(mapname_out, nside, ordering, header, map, suffix=='_dp')
+     call write_result_map(mapname_out, nside, ordering, header, map, suffix=='_dp', pixel)
 
   else if (trim(operation) == 'make_co_region_map') then
 
@@ -699,7 +701,7 @@ program map_editor
      call make_co_region_map(mapname_in1, nside, ordering, map)
 
      call write_minimal_header(header, 'MAP', nside=nside, order=ordering, polar=size(map,2)==3)
-     call write_result_map(mapname_out, nside, ordering, header, map, suffix=='_dp')
+     call write_result_map(mapname_out, nside, ordering, header, map, suffix=='_dp', pixel)
 
   else if (trim(operation) == 'extract_multipole_range') then
 
@@ -712,7 +714,7 @@ program map_editor
 
      call extract_multipole_range(mapname_in1, lmin, lmax, nside, ordering, map, header)
 
-     call write_result_map(mapname_out, nside, ordering, header, map, suffix=='_dp')
+     call write_result_map(mapname_out, nside, ordering, header, map, suffix=='_dp', pixel)
 
   else if (trim(operation) == 'ud_grade') then
 
@@ -1063,6 +1065,7 @@ program map_editor
      write(*,*) 'Unknown operation. Exiting.'
      stop 
   end if
+
 
 
   ! Clean up arrays and exit 

@@ -14,12 +14,13 @@ module map_editor_utils
 contains
 
   ! Routine for reading the first map
-  subroutine initialize_single_map(filename, nside, ordering, nmaps, header, map)
+  subroutine initialize_single_map(filename, nside, ordering, nmaps, header, map, pixel)
     implicit none
 
     character(len=256),                         intent(in)  :: filename
     integer(i4b),                               intent(out) :: nside, ordering, nmaps
     real(dp),           pointer, dimension(:,:)             :: map
+    integer(i4b),       pointer, dimension(:)               :: pixel
     character(len=80),           dimension(180)             :: header
 
     integer(i4b) :: temp, npix
@@ -30,25 +31,39 @@ contains
 
     npix = nside2npix(nside)
 
-    allocate(map(0:npix-1,nmaps))
+    if (temp .eq. npix) then
 
-    call read_bintab(filename, map, npix, nmaps, nullval, anynull, header=header)
+       allocate(map(0:npix-1,nmaps))
+
+       call read_bintab(filename, map, npix, nmaps, nullval, anynull, header=header)
+    else
+
+       allocate(map(0:temp-1, nmaps))
+       allocate(pixel(0:temp-1))
+
+       map = 0d0
+       pixel = 0
+
+       call read_fits_partial(filename, pixel, map, header=header)
+    end if
 
   end subroutine initialize_single_map
 
   ! Routine for reading a second map, and convert its properties to those of the first map
-  subroutine initialize_second_map(filename, nside, ordering, nmaps, map)
+  subroutine initialize_second_map(filename, nside, ordering, nmaps, map, pixel)
     implicit none
 
     character(len=256),                         intent(in)  :: filename
     integer(i4b),                               intent(in)  :: nside, ordering
     real(dp),           pointer, dimension(:,:)             :: map
+    integer(i4b),       pointer, dimension(:)               :: pixel
 
     real(dp)     :: nullval
     integer(i4b) :: i, temp, nmaps, npix, npix_in, nside_in, ordering_in, nmaps_in
     logical(lgt) :: anynull
 
     real(dp), allocatable, dimension(:,:) :: map_in
+    integer(i4b), allocatable, dimension(:) :: pixel_in
 
     ! Get general information for the file
     temp = getsize_fits(filename, nside=nside_in, ordering=ordering_in, nmaps=nmaps_in)
@@ -65,7 +80,13 @@ contains
 
        allocate(map_in(0:npix_in-1,nmaps))
        allocate(map(0:npix-1,nmaps))
-       call read_bintab(filename, map_in, npix_in, nmaps, nullval, anynull)
+       if (temp .eq. npix_in) then
+         call read_bintab(filename, map_in, npix_in, nmaps, nullval, anynull)
+       else
+         allocate(pixel_in(0:npix-1))
+         call read_fits_partial(filename, pixel_in, map_in)
+         deallocate(pixel_in)
+       end if
 
        write(*,*) 'Warning: Nsides differ -- setting output Nside to ', nside
        if (ordering_in == 1) then
@@ -82,8 +103,17 @@ contains
 
     else
 
-       allocate(map(0:npix-1,nmaps))
-       call read_bintab(filename, map, npix, nmaps, nullval, anynull)
+       if (temp .eq. npix_in) then
+        allocate(map(0:npix-1,nmaps))
+         call read_bintab(filename, map, npix_in, nmaps, nullval, anynull)
+       else
+         allocate(map(0:temp-1,nmaps))
+         map = 0d0
+         pixel_in = 0
+         allocate(pixel_in(0:temp-1))
+         call read_fits_partial(filename, pixel_in, map)
+         deallocate(pixel_in)
+       end if
 
     end if
 
@@ -175,7 +205,7 @@ contains
 
 
   ! Routine for writing the output map
-  subroutine write_result_map(filename, nside, ordering, header, map, double_precision)
+  subroutine write_result_map(filename, nside, ordering, header, map, double_precision, pixel)
     implicit none
 
     character(len=*),                     intent(in)    :: filename
@@ -183,6 +213,7 @@ contains
     character(len=80),  dimension(180),   intent(inout) :: header
     real(dp),           dimension(0:,1:), intent(in)    :: map
     logical(lgt),                         intent(in), optional :: double_precision
+    integer(i4b),       dimension(0:),    intent(in), optional    :: pixel
 
     integer(i4b) :: i, nlheader, nmaps, npix, j
     character(len=80)                   :: line
@@ -279,13 +310,23 @@ contains
 !!$    endif
 !!$    call add_card(header,"COMMENT","*************************************")
 
+
     outfile = '!' // trim(filename)
     if (present(double_precision)) then
-       call write_bintab(map, npix, nmaps, header, nlheader, outfile)
+       if (present(pixel)) then
+         call write_fits_partial(outfile, pixel, map, header(1:nlheader))
+       else
+         call write_bintab(map, npix, nmaps, header, nlheader, outfile)
+       end if
     else
-       call write_bintab(real(map,sp), npix, nmaps, header, nlheader, outfile)
+       if (present(pixel)) then
+         np = findloc(pixel, 0, dim=1, kind=i4b)
+         call write_fits_partial(outfile, pixel, real(map,sp), header(1:nlheader))
+       else
+         call write_bintab(map, npix, nmaps, header, nlheader, outfile)
+       end if
     end if
-    
+
   end subroutine write_result_map
 
 

@@ -3,12 +3,12 @@ export RANLIB := ranlib
 
 # ================= Compilers ====================
 # Serial Fortran 90 compiler.  Default is "f90".
-export F90 := ifort
+export F90 := ifx
 
 # =========== Compiler Optimizations =============
 # Fortran 90 compiler flags
-export F90FLAGS := -g -O3 -assume byterecl
-#export F90FLAGS := -g -C -assume byterecl -traceback
+export F90FLAGS := -O3 -assume byterecl -xHost -fp-model fast 
+#export F90FLAGS := -g -O0 -assume byterecl -traceback -check all -fpe0 -warn all,no-unused
 
 # Extra flags used for linking
 export LDFLAGS := -cxxlib -qopenmp
@@ -16,7 +16,9 @@ export OPENMP := -qopenmp
 
 # =============== Main path ================
 # Let this point to your own Commander directory
-export LOCAL=/mn/stornext/u3/ingunnkw/git/commander/build/install
+#export LOCAL=/mn/stornext/u3/ingunnkw/git/commander/build/install
+export LOCAL=/mn/stornext/u3/duncanwa/Commander/build_owl3637_oneapi_Release/install
+
 
 # =============== CFITSIO Linking ================
 # The include and linking commands for cfitsio.
