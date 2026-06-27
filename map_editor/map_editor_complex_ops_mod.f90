@@ -1856,19 +1856,21 @@ contains
 
     integer(i4b)       :: nside_in, npix, npix_in
     integer(i4b)       :: i, j, k, l, m, r, nlist
-    real(dp)           :: nullval, tot
+    real(dp)           :: nullval, tot, missval
     real(dp)           :: sigma_sq, nullval_dp, vec(3), theta, phi, rf
     logical(lgt)       :: anynull
     character(len=512) :: winfile_in, winfile_out
     character(len=4)   :: ntext
 
     complex(dpc), allocatable, dimension(:,:,:) :: alms
-    real(dp),     allocatable, dimension(:,:)   :: map_in, map_buffer
+    real(dp),     allocatable, dimension(:,:)   :: map_in, map_buffer, map_cut
     real(dp),     pointer,     dimension(:,:)   :: pixwin_in, pixwin_out
     real(dp),     pointer,     dimension(:,:)   :: weights
     real(dp),     allocatable, dimension(:,:)   :: beam_in, beam_out
     real(dp),                  dimension(2)     :: zbounds = 0.d0
-    integer(i4b), allocatable, dimension(:)     :: listpix
+    integer(i4b), allocatable, dimension(:)     :: listpix, pix_cut
+
+    missval = -1.6375d30
 
     ! Read input map
     i = getsize_fits(infile, nside=nside_in, ordering=ordering, nmaps=nmaps)
@@ -1885,7 +1887,40 @@ contains
     allocate(map_in(0:npix_in-1,nmaps), map_buffer(0:npix_in-1,nmaps))
     allocate(map(0:npix-1,nmaps))
 
-    call read_bintab(infile, map_in, npix_in, nmaps, nullval, anynull, header=header)
+
+
+    if (i .eq. npix) then
+       call read_bintab(infile, map_in, npix_in, nmaps, nullval, anynull, header=header)
+    else
+
+       allocate(pix_cut(0:i-1), map_cut(0:i-1, nmaps))
+
+       map_cut = 0d0
+       pix_cut = 0
+
+       call read_fits_partial(infile, pix_cut, map_cut, header=header)
+       do j = 1, size(header)
+         if (index(header(j), 'INDXSCHM') /= 0) then
+           header(j) = ''
+         end if
+         if (index(header(j), 'OBJECT') /= 0) then
+           header(j) = ''
+         end if
+         if (index(header(j), 'OBS_NPIX') /= 0) then
+           header(j) = ''
+         end if
+       end do
+
+       map_in  = 0d0
+       do j = 1, nmaps
+         do k = 0, i-1 
+           map_in(pix_cut(k),j) = map_cut(k, j)
+         end do
+       end do
+       deallocate(map_cut, pix_cut)
+
+       call write_result_map('test.fits', nside_in, ordering, header, map_in)
+    end if
 
     if (ordering == 2) then
        do i = 1, nmaps

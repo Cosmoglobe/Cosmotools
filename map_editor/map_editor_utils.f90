@@ -312,6 +312,7 @@ contains
 
 
     outfile = '!' // trim(filename)
+
     if (present(double_precision)) then
        if (present(pixel)) then
          call write_fits_partial(outfile, pixel, map, header(1:nlheader))
@@ -320,7 +321,6 @@ contains
        end if
     else
        if (present(pixel)) then
-         np = findloc(pixel, 0, dim=1, kind=i4b)
          call write_fits_partial(outfile, pixel, real(map,sp), header(1:nlheader))
        else
          call write_bintab(map, npix, nmaps, header, nlheader, outfile)
